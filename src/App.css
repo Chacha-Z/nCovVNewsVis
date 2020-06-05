@@ -1,5 +1,8 @@
-.ant-row {
-    height: 49%;
+.ant-row:first-child {
+    height: 58%;
+}
+.ant-row:last-child {
+    height: 40%;
 }
 
 .content {
