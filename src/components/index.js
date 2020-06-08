@@ -1,4 +1,4 @@
-import MainView from './MainView'
+import MainView from './MainView/MainView'
 
 export {
     MainView,

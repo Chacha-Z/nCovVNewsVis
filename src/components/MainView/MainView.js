@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import axios from 'axios';
 import TopBar from '../TopBar/TopBar';
 import { Switch } from 'antd';
+import './MainView.css'
 
 class MainView extends Component {
   constructor(props) {
@@ -36,7 +37,6 @@ class MainView extends Component {
 
         rawData1.forEach(e => {
           e.date = parseDate1(e.date);
-          e.totalHot =Math.log(e.totalHot)
         })
         _this.setState({
           overallD: rawData1,
@@ -44,7 +44,6 @@ class MainView extends Component {
 
         rawData2.forEach(e => {
           e.begin = parseDate1(e.begin);
-          e.TotalHot =Math.log(e.TotalHot)
         })
         _this.setState({
           overallW: rawData2,
@@ -108,9 +107,6 @@ class MainView extends Component {
     const hot = ['TotalHot', 'totalHot']
     const number = ['world', 'china']
 
-    console.log(date[this.state.isDay])
-    console.log(data[this.state.isDay])
-    console.log(this.state.cases)
     //初始/默认数据：
     //时间轴：以天为单位，展示全部；
     //显示区域：默认以天为单位，选中最近20天；
@@ -200,7 +196,7 @@ class MainView extends Component {
                     $plot.select('.axis.x').call(xAxis);
                   });
     var symbolkeys = [d3.symbolCircle, d3.symbolSquare, d3.symbolTriangle, d3.symbolStar, d3.symbolCross, d3.symbolWye];
-    var symbolSize = this.state.isDay?60:200;
+    var symbolSize = this.state.isDay?80:200;
     var symbol = d3.symbol().type(d=>symbolkeys[d.classification]).size(symbolSize);
     var area = d3.area()
               .x(d => x(d.date))
@@ -223,11 +219,15 @@ class MainView extends Component {
     var x3 = d3.scaleTime().range([padding3, w-padding3]);
     var y3 = d3.scaleLinear().range([h3-padding3, padding3+10]);
     var xAxis3 = d3.axisBottom(x3);
-    var $detail = d3.select("#detail-view")
-                    .attr('width', w + margin3.left + margin3.right)
-                    .attr('height', h3 + margin3.top + margin3.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
+    if(d3.select("#detail-view").selectAll('g').empty()){
+      var $detail = d3.select("#detail-view")
+                      .attr('width', w + margin3.left + margin3.right)
+                      .attr('height', h3 + margin3.top + margin3.bottom)
+                      .append("g")
+                      .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
+    }else{
+      var $detail = d3.select("#detail-view").select('g')
+    }
     var line3 = d3.line()
                   .x(d => x3(d.t))
                   .y(d => y3(d.hot))
@@ -247,6 +247,15 @@ class MainView extends Component {
         .attr('y', 0)
         .attr('width', w)
         .attr('height', h)
+
+    //timeline蒙版
+    $plot.append('clipPath')
+        .attr('id', 'timeline-area')
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', w)
+        .attr('height', h2)
 
     //区域生成器
     area.y0(casesy(d3.min(this.state.cases, d=>d[number[this.state.isChina]])))
@@ -286,12 +295,21 @@ class MainView extends Component {
           .attr('class', 'markP')
           .attr('d', symbol)
           .attr('fill', d=>color(d.classification))
-          .attr('opacity', '0.75')
+          .attr('opacity', '0.65')
     $plot.selectAll('.mark')
         .attr("transform", d => {
           return `translate(${x(d[date[this.state.isDay]])}, ${mainy(d[hot[this.state.isDay]])})`;
         })
-        .on('click', (d)=>{this.getDetail(d.week, d.day, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol)})
+        .on('mouseover', function(d){
+            d3.select(this).selectAll('.markP')
+                .style('cursor', 'pointer')
+                .classed('mouseon', true)
+        })
+        .on("mouseout", function(d) {	
+            d3.select(this).selectAll('.markP')
+                .classed('mouseon', false)
+        })
+        .on('click', (d)=>{this.getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol)})
 
     //坐标轴绘制
     $plot.append('g')
@@ -319,6 +337,7 @@ class MainView extends Component {
     area2.y0(casesy2(d3.min(this.state.cases, d=>d[number[this.state.isChina]])))
     $timeline.append('g')
             .attr('class', 'area2')
+            .attr('clip-path', 'url(#timeline-area)')
             .append('path')
             .datum(this.state.cases)
             .attr('class', 'backgroud2')
@@ -345,26 +364,26 @@ class MainView extends Component {
     $timeline.append('g')
             .call(brush);
   
-
-
   }
 
-  getDetail(week, day, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
+  getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
     var parseDate = d3.timeParse('%Y-%m-%d %H:%M:%S');
-
+    console.log(d)
     var _this = this;
-    if(week < 10){
-      week = '0'+ week
+    var tempWeek = d.week
+    var tempDate = d[['begin', 'date'][this.state.isDay]]
+    if(tempWeek < 10){
+      tempWeek = '0'+ tempWeek
     }
 
     axios.post(" http://120.27.243.210:3000/postWeek",
     //参数列表
       {
-        week: week
+        week: tempWeek
       },
     ).then((res)=>{
-        console.log(week)
-        console.log(day)
+        console.log(tempWeek)
+        console.log(d.day)
         var r = res.data.results
         r.forEach(e => {
           e.t = parseDate(e.t)
@@ -373,51 +392,64 @@ class MainView extends Component {
           dayDetail: r,
         });
         console.log(r)
-        _this.drawWeek($detail, day, w, h3, x3, y3, line3, xAxis3, color, symbol)
+        _this.drawWeek($detail, d.day, tempDate, w, h3, x3, y3, line3, xAxis3, color, symbol)
     })
 
   }
-  drawWeek($detail, day, w, h3, x3, y3, line3, xAxis3, color, symbol){
+  drawWeek($detail, day, date, w, h3, x3, y3, line3, xAxis3, color, symbol){
+    console.log(date)
+
+    var dateFormat =d3.timeFormat("%Y-%m-%d"); 
+    var tempDate = dateFormat(date)
     if(day == undefined){
-      day = 0;
+      day = 1;
     }
+    if(day==0) day=7;
+
     $detail.selectAll('g').remove();
     // 周导航
     const keys = [
       {
-        key: 0,
-        value: '周一',
-        data: this.state.dayDetail.filter(e => e.day == 0)
-      }, 
-      {
         key: 1,
-        value: '周二',
-        data: this.state.dayDetail.filter(e => e.day == 1)
+        value: '周一',
+        data: this.state.dayDetail.filter(e => e.day == 1),
+        date: dateFormat(d3.timeDay.offset(date, 1-day))
       }, 
       {
         key: 2,
-        value: '周三',
-        data: this.state.dayDetail.filter(e => e.day == 2)
+        value: '周二',
+        data: this.state.dayDetail.filter(e => e.day == 2),
+        date: dateFormat(d3.timeDay.offset(date, 2-day))
       }, 
       {
         key: 3,
-        value: '周四',
-        data: this.state.dayDetail.filter(e => e.day == 3)
+        value: '周三',
+        data: this.state.dayDetail.filter(e => e.day == 3),
+        date: dateFormat(d3.timeDay.offset(date, 3-day))
       }, 
       {
         key: 4,
-        value: '周五',
-        data: this.state.dayDetail.filter(e => e.day == 4)
+        value: '周四',
+        data: this.state.dayDetail.filter(e => e.day == 4),
+        date: dateFormat(d3.timeDay.offset(date, 4-day))
       }, 
       {
         key: 5,
-        value: '周六',
-        data: this.state.dayDetail.filter(e => e.day == 5)
+        value: '周五',
+        data: this.state.dayDetail.filter(e => e.day == 5),
+        date: dateFormat(d3.timeDay.offset(date, 5-day))
       }, 
       {
         key: 6,
+        value: '周六',
+        data: this.state.dayDetail.filter(e => e.day == 6),
+        date: dateFormat(d3.timeDay.offset(date, 6-day))
+      }, 
+      {
+        key: 7,
         value: '周日',
-        data: this.state.dayDetail.filter(e => e.day == 6)
+        data: this.state.dayDetail.filter(e => e.day == 0),
+        date: dateFormat(d3.timeDay.offset(date, 7-day))
       }, 
     ]
     console.log(keys)
@@ -428,6 +460,7 @@ class MainView extends Component {
                         .enter()
                         .append('g')
                         .attr('class', 'week')
+    const $outer = $detail.append('g').attr('class', 'detail-outer')
     $week.append('rect')
           .attr('x', (d, i) => i*(w/7))
           .attr('y', -9)
@@ -442,6 +475,8 @@ class MainView extends Component {
           .on('click', e => {
             $week.selectAll('rect')
                 .attr('width', d => d.key==e.key?0:w/7)
+            $outer.select('.day-text')
+                .text(e.date)
             this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
           })
     $week.append('text')
@@ -460,16 +495,29 @@ class MainView extends Component {
           .on('click', e => {
             $week.selectAll('rect')
                 .attr('width', d => d.key==e.key?0:w/7)
+            $outer.select('.day-text')
+                .text(e.date)
             this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
           })
-    $detail.append('rect')
+    $outer.append('rect')
           .attr('x', 0)
           .attr('y', -9)
           .attr('width', w)
           .attr('height', h3+35)
           .attr('fill', 'none')
           .attr('stroke', 'grey')
-    this.drawDetail($context, keys[day].data, x3, y3, h3, line3, xAxis3, color, symbol)
+    $outer.append('text')
+          .attr('class', 'day-text')
+          .attr('x', -30)
+          .attr('y', -10)
+          .attr('fill', 'black')
+          .text(tempDate)
+          .style('text-anchor', 'middle')
+          .style('font-size', '12')
+          .style('fill', 'grey')
+          .attr('transform', "rotate(270)")
+          
+    this.drawDetail($context, keys[day-1].data, x3, y3, h3, line3, xAxis3, color, symbol)
   }
   drawDetail($context, weekdata, x3, y3, h3, line3, xAxis3, color, symbol){
     $context.selectAll('g').remove();
@@ -503,7 +551,16 @@ class MainView extends Component {
                     .attr('class', 'dmarkP')
                     .attr('d', symbol)
                     .attr('fill', d=>color(d.classification))
-                    .attr('opacity', '0.75')
+                    .attr('opacity', '0.65')
+                    .on('mouseover', function(d){
+                        d3.select(this)
+                            .style('cursor', 'pointer')
+                            .classed('mouseon', true)
+                    })
+                    .on('mouseout', function(d){
+                        d3.select(this)
+                            .classed('mouseon', false)
+                    })
     $context.selectAll('.dmark')
         .attr("transform", d => {
           return `translate(${x3(d.t)}, ${y3(d.hot)})`;
