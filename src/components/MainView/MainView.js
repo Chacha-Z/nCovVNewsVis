@@ -18,7 +18,7 @@ class MainView extends Component {
         isDay: 1,
         isChina: 1,
         onFocusDay: '',
-        onFocusWeek: ''
+        onFocusWeek: -1
     };
     this.switchDay = this.switchDay.bind(this);
     this.switchCountry = this.switchCountry.bind(this);
@@ -101,8 +101,8 @@ class MainView extends Component {
 
   drawMainView(){
     const date = ['begin', 'date']
-    const date2 = ['week', 'date']
     const data = [this.state.overallW, this.state.overallD]
+    const date2 = ['week', 'date']
     const stateFocus = [this.state.onFocusWeek, this.state.onFocusDay]
     const hot = ['TotalHot', 'totalHot']
     const number = ['world', 'china']
@@ -117,7 +117,7 @@ class MainView extends Component {
     var padding = this.state.isDay?5:10
     //长宽高常量设定
     var h2 = 25;
-    var margin2 = {top:15, right:60, bottom:20, left:60}
+    var margin2 = {top:15, right:100, bottom:20, left:40}
 
     var margin = {top:h2+margin2.top+margin2.bottom, right:margin2.right, bottom:30, left:margin2.left};
     var w = 1020 - margin.left - margin.right,
@@ -150,7 +150,7 @@ class MainView extends Component {
     const mainyAxis = d3.axisLeft()
                   .scale(mainy);
     const casesyAxis = d3.axisRight()
-                  .scale(casesy);
+                  .scale(casesy)
     const xAxis2 = d3.axisBottom(x2)
                     .tickFormat(d3.timeFormat('%d/%m'))
     
@@ -284,7 +284,6 @@ class MainView extends Component {
           .attr('stroke', 'grey')
           .attr('stroke-dasharray', '5,5')
           .attr('fill', 'none')
-
     //形状生成器
     //绑定数据
     $plot.append('g')
@@ -411,7 +410,6 @@ class MainView extends Component {
 
     const date2 = ['week', 'date']
 
-    var dateParse =d3.timeParse("%Y-%m-%d"); 
     var dateFormat =d3.timeFormat("%Y-%m-%d"); 
     var tempDate = dateFormat(date)
     if(day == undefined){
@@ -591,8 +589,12 @@ class MainView extends Component {
                             .classed('mouseon', false)
                     })
                     .on('click', function(d){
-                      console.log(d)
+                      d3.select(this)
+                          .style('cursor', 'pointer')
+                          .classed('mouseon', true)
+
                       EventBus.emit('weibo-click', d.id)
+
                     })
     $context.selectAll('.dmark')
         .attr("transform", d => {
