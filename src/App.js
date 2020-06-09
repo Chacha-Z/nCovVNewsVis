@@ -3,7 +3,6 @@ import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
 import {
-  Header,
   MainView,
   PieChart,
   WordCloud,
@@ -17,7 +16,7 @@ function App() {
     <>
       <Row style={{ marginBottom: '4px' }}>
         <Col span={16}>
-          <div className='content'>
+          <div className='content' id='mainview'>
             <MainView></MainView>
           </div>
         </Col>

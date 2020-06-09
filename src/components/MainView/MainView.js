@@ -18,7 +18,8 @@ class MainView extends Component {
         isDay: 1,
         isChina: 1,
         onFocusDay: '',
-        onFocusWeek: ''
+        onFocusWeek: -1,
+        onFocusWeibo: -1
     };
     this.switchDay = this.switchDay.bind(this);
     this.switchCountry = this.switchCountry.bind(this);
@@ -76,8 +77,10 @@ class MainView extends Component {
           <>
           <TopBar>
               <span id='top-title'>主视图</span>
-              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} size="small"  checkedChildren="中国" unCheckedChildren="海外" defaultChecked onChange={this.switchCountry}/>
-              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} size="small"  checkedChildren="天" unCheckedChildren="周" defaultChecked onChange={this.switchDay}/>
+              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
+                size="small"  checkedChildren="中国疫情背景" unCheckedChildren="海外疫情背景" defaultChecked onChange={this.switchCountry}/>
+              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
+                size="small"  checkedChildren="天视图" unCheckedChildren="周视图" defaultChecked onChange={this.switchDay}/>
           </TopBar>
           <svg id='main-view'></svg>
           <svg id="detail-view">
@@ -101,12 +104,16 @@ class MainView extends Component {
 
   drawMainView(){
     const date = ['begin', 'date']
-    const date2 = ['week', 'date']
     const data = [this.state.overallW, this.state.overallD]
+    const date2 = ['week', 'date']
     const stateFocus = [this.state.onFocusWeek, this.state.onFocusDay]
     const hot = ['TotalHot', 'totalHot']
     const number = ['world', 'china']
     console.log(this.state.overallW, this.state.overallD, this.state.cases)
+
+
+    var obj = document.getElementById("mainview");
+    console.log(obj.clientWidth + "," + obj.clientHeight);
 
     //初始/默认数据：
     //时间轴：以天为单位，展示全部；
@@ -116,12 +123,13 @@ class MainView extends Component {
 
     var padding = this.state.isDay?5:10
     //长宽高常量设定
-    var h2 = 25;
-    var margin2 = {top:15, right:60, bottom:20, left:60}
+    var h2 = obj.clientHeight*0.05;
+    var margin2 = {top:15, right:130, bottom:20, left:40}
 
     var margin = {top:h2+margin2.top+margin2.bottom, right:margin2.right, bottom:30, left:margin2.left};
-    var w = 1020 - margin.left - margin.right,
-        h = 265 - margin.top - margin.bottom;
+    var w = obj.clientWidth  - margin.left - margin.right,
+        h = obj.clientHeight*0.6 - margin.top - margin.bottom;
+    console.log(w)
 
     //比例尺
     var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -150,7 +158,7 @@ class MainView extends Component {
     const mainyAxis = d3.axisLeft()
                   .scale(mainy);
     const casesyAxis = d3.axisRight()
-                  .scale(casesy);
+                  .scale(casesy)
     const xAxis2 = d3.axisBottom(x2)
                     .tickFormat(d3.timeFormat('%d/%m'))
     
@@ -182,6 +190,10 @@ class MainView extends Component {
                   })
                   .on('end', ()=>{
                     const selection = d3.event.selection;
+                    console.log(selection)
+                    if(selection == null){
+                      return ;
+                    }
                     var dateRange = selection.map(x2.invert, x2);
                     var dateFormat =d3.timeFormat("%Y-%m-%d"); 
 
@@ -219,7 +231,7 @@ class MainView extends Component {
     //详细视图初始化
     const padding3 = 8;
     var margin3 = {top:10, right:margin2.right, bottom:30, left:margin2.left}
-    var h3 = 80;
+    var h3 = obj.clientHeight*0.18;
     var x3 = d3.scaleTime().range([padding3, w-padding3]);
     var y3 = d3.scaleLinear().range([h3-padding3, padding3+10]);
     var xAxis3 = d3.axisBottom(x3);
@@ -284,7 +296,6 @@ class MainView extends Component {
           .attr('stroke', 'grey')
           .attr('stroke-dasharray', '5,5')
           .attr('fill', 'none')
-
     //形状生成器
     //绑定数据
     $plot.append('g')
@@ -378,6 +389,62 @@ class MainView extends Component {
     $timeline.append('g')
             .call(brush);
   
+
+    //图标说明
+    this.drawLegend($plot, symbol, color, w, margin)
+  }
+
+  drawLegend($plot, symbol, color, w, margin){
+    symbol.size(80)
+    const keys = [
+      {
+        classification: 0,
+        text: '疫情情况',
+      },
+      {
+        classification: 1,
+        text: '药品研究',
+      },
+      {
+        classification: 2,
+        text: '复工开学',
+      },
+      {
+        classification: 3,
+        text: '社会人文',
+      },
+      {
+        classification: 4,
+        text: '政府作为',
+      },
+      {
+        classification: 5,
+        text: '国外疫况',
+      }
+    ];
+    //添加颜色标签
+    const legend = $plot.append('g')
+            .attr('class', 'plot-legend')
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 10)
+            .attr('text-anchor', 'end')
+            .selectAll("g")
+            .data(keys)
+            .enter().append("g")
+            .attr("transform", (d, i) => `translate(${w+margin.left+20}, ${i*25+20})`);
+    legend.append('path')
+            .attr('d', symbol)
+            .attr('opacity', .7)
+            .attr('fill', (d, i) => color(i))
+            .attr('rx', 2);
+    legend.append('text')
+            .attr('x', 10)
+            .attr('dx', '0.325em')
+            .attr('y', 10)
+            .attr('dy', '-0.65em')
+            .attr('text-anchor', 'start')
+            .attr('dominant-baseline', 'baseline')
+            .text(d => d.text)
   }
 
   getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
@@ -411,7 +478,6 @@ class MainView extends Component {
 
     const date2 = ['week', 'date']
 
-    var dateParse =d3.timeParse("%Y-%m-%d"); 
     var dateFormat =d3.timeFormat("%Y-%m-%d"); 
     var tempDate = dateFormat(date)
     if(day == undefined){
@@ -554,7 +620,6 @@ class MainView extends Component {
     // this.getData()
 
     //比例尺值域设置
-    color.domain([0, 6])
     x3.domain([d3.min(weekdata, d=>d.t), d3.max(weekdata, d=>d.t)])
     y3.domain([d3.min(weekdata, d=>d.hot), d3.max(weekdata, d=>d.hot)])
     console.log(y3.domain())
@@ -590,9 +655,15 @@ class MainView extends Component {
                         d3.select(this)
                             .classed('mouseon', false)
                     })
-                    .on('click', function(d){
-                      console.log(d)
+                    .on('click', d=>{
+                      
+                      this.setState({onFocusWeibo: d.id}, ()=>{
+                        $context.selectAll('.dmarkP')
+                          .attr('opacity', d=>d.id==this.state.onFocusWeibo?'1': '0.55')
+                      })
+
                       EventBus.emit('weibo-click', d.id)
+
                     })
     $context.selectAll('.dmark')
         .attr("transform", d => {
