@@ -1,5 +1,6 @@
 import React from 'react'
 import './PieChart.css'
+import TopBar from '../TopBar/TopBar';
 import axios from 'axios'
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
@@ -126,7 +127,7 @@ export default class PieChart extends React.Component {
                     //sizeRange: [15, 40],
                     rotationRange: [-45, 45],
                     rotationStep: 30,
-                    shape: 'circle',                 
+                    shape: 'circle',
                     //drawOutOfBound:true,
                     textStyle: {
                         normal: {
@@ -156,7 +157,11 @@ export default class PieChart extends React.Component {
 
     render() {
         return (
-            <div style={{ height: '120px', width: '300px' }}>
+
+            <div>
+                <TopBar>
+                    <span id='pie-title'>评论情绪分析</span>
+                </TopBar>
                 <ReactEcharts option={this.getOption()} />
             </div>
         )

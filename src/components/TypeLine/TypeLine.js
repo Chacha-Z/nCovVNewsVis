@@ -1,5 +1,6 @@
 import React from 'react'
 import './TypeLine.css'
+import TopBar from '../TopBar/TopBar';
 import axios from 'axios'
 import ReactEcharts from 'echarts-for-react';
 
@@ -110,11 +111,11 @@ export default class TypeLine extends React.Component {
                     {
                         value: this.state.data[0],
                         symbol: 'circle',
-                       
+
                     },
                     {
                         value: this.state.data[1],
-                        symbol: 'rect', 
+                        symbol: 'rect',
                         symbolSize: [17, 17]
                     },
                     {
@@ -127,12 +128,12 @@ export default class TypeLine extends React.Component {
                     },
                     {
                         value: this.state.data[4],
-                        symbol: 'path://M404.82 912V619.18H112V404.82h292.82V112h214.36v292.82H912v214.36H619.18V912z',                    
+                        symbol: 'path://M404.82 912V619.18H112V404.82h292.82V112h214.36v292.82H912v214.36H619.18V912z', //十字架
                     },
                     {
                         value: this.state.data[5],
                         symbol: 'path://M438.667077 591.098245 237.304589 0l155.338466 0 117.927933 407.002156 2.877733 0L631.376655 0l155.318756 0L585.352633 591.098245l0 432.901755-146.685556 0L438.667077 591.098245z',
-                        symbolSize: [15, 15]
+                        symbolSize: [15, 15] // Y
                     },
                 ]
             }]
@@ -143,6 +144,9 @@ export default class TypeLine extends React.Component {
     render() {
         return (
             <div style={{ height: '220px', width: '480px' }}>
+                <TopBar>
+                    <span id='type-title'>事件类别统计</span>
+                </TopBar>
                 <ReactEcharts option={this.getOption()} />
             </div>
         )

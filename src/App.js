@@ -3,6 +3,8 @@ import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
 import {
+  Header,
+  MainView,
   PieChart,
   WordCloud,
   DetailText,
@@ -13,28 +15,35 @@ import {
 function App() {
   return (
     <>
-      <Row style={{ marginBottom: '4px' }} gutter={4}>
-        <Col span={6}>
-          <div className='content'></div>
+      <Row style={{ marginBottom: '4px' }}>
+        <Col span={16}>
+          <div className='content'>
+            <MainView></MainView>
+          </div>
         </Col>
-        <Col span={12}>
-         
-         
-        </Col>
-        <Col span={6}>
-          <HotRank> </HotRank>
+        <Col span={8}>
+          <div className='content'>
+            <HotRank> </HotRank>
+          </div>
+
         </Col>
       </Row>
-      <Row gutter={4}>
+      <Row>
         <Col span={10}>
-          <DetailText> </DetailText>
+          <div className='content'>
+            <DetailText> </DetailText>
+          </div>
         </Col>
         <Col span={6}>
-          <PieChart></PieChart>
+          <div className='content'>
+            <PieChart></PieChart>
+          </div>
         </Col>
         <Col span={8}>
           {/* <WordCloud> </WordCloud> */}
-          <TypeLine> </TypeLine>
+          <div className='content'>
+            <TypeLine> </TypeLine>
+          </div>
         </Col>
       </Row>
     </>
