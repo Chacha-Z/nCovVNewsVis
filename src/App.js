@@ -1,34 +1,40 @@
 import React from 'react';
-import {  Row, Col  } from 'antd';
+import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
-import{
-  Header,
+import {
+  PieChart,
+  WordCloud,
+  DetailText,
+  HotRank,
+  TypeLine
 } from './components'
 
 function App() {
   return (
     <>
-      <Row style={{marginBottom:'4px'}}>
+      <Row style={{ marginBottom: '4px' }} gutter={4}>
         <Col span={6}>
           <div className='content'></div>
         </Col>
         <Col span={12}>
-          <div className='content'></div>
+         
+         
         </Col>
         <Col span={6}>
-          <div className='content'></div>
+          <HotRank> </HotRank>
         </Col>
       </Row>
-      <Row>
-        <Col span={8}>
-          <div className='content'></div>
+      <Row gutter={4}>
+        <Col span={10}>
+          <DetailText> </DetailText>
+        </Col>
+        <Col span={6}>
+          <PieChart></PieChart>
         </Col>
         <Col span={8}>
-          <div className='content'></div>
-        </Col>
-        <Col span={8}>
-          <div className='content'></div>
+          {/* <WordCloud> </WordCloud> */}
+          <TypeLine> </TypeLine>
         </Col>
       </Row>
     </>
