@@ -111,6 +111,10 @@ class MainView extends Component {
     const number = ['world', 'china']
     console.log(this.state.overallW, this.state.overallD, this.state.cases)
 
+
+    var obj = document.getElementById("mainview");
+    console.log(obj.clientWidth + "," + obj.clientHeight);
+
     //初始/默认数据：
     //时间轴：以天为单位，展示全部；
     //显示区域：默认以天为单位，选中最近20天；
@@ -119,12 +123,13 @@ class MainView extends Component {
 
     var padding = this.state.isDay?5:10
     //长宽高常量设定
-    var h2 = 25;
+    var h2 = obj.clientHeight*0.05;
     var margin2 = {top:15, right:130, bottom:20, left:40}
 
     var margin = {top:h2+margin2.top+margin2.bottom, right:margin2.right, bottom:30, left:margin2.left};
-    var w = 1020 - margin.left - margin.right,
-        h = 265 - margin.top - margin.bottom;
+    var w = obj.clientWidth  - margin.left - margin.right,
+        h = obj.clientHeight*0.6 - margin.top - margin.bottom;
+    console.log(w)
 
     //比例尺
     var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -226,7 +231,7 @@ class MainView extends Component {
     //详细视图初始化
     const padding3 = 8;
     var margin3 = {top:10, right:margin2.right, bottom:30, left:margin2.left}
-    var h3 = 80;
+    var h3 = obj.clientHeight*0.18;
     var x3 = d3.scaleTime().range([padding3, w-padding3]);
     var y3 = d3.scaleLinear().range([h3-padding3, padding3+10]);
     var xAxis3 = d3.axisBottom(x3);

@@ -11,7 +11,7 @@ function App() {
     <>
       <Row style={{marginBottom:'4px'}}>
         <Col span={16}>
-          <div className='content'>
+          <div className='content' id='mainview'>
             <MainView></MainView>
           </div>
         </Col>
