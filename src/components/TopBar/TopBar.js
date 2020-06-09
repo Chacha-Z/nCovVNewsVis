@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import './TopBar.css'
+import './TopBar.css';
+import EventBus from '../../utils/EventBus'
 
 class TopBar extends Component {
   constructor(props) {
@@ -9,7 +10,13 @@ class TopBar extends Component {
   }
 
   componentDidMount(){
+    EventBus.addListener('weibo-click', (id)=>{
+      console.log('id: ', id)
+    })
 
+    EventBus.addListener('time-brush', (r)=>{
+      console.log('r: ', r)
+    })
 
   }
 

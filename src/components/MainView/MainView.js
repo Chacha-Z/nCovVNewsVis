@@ -3,7 +3,8 @@ import * as d3 from "d3";
 import axios from 'axios';
 import TopBar from '../TopBar/TopBar';
 import { Switch } from 'antd';
-import './MainView.css'
+import './MainView.css';
+import EventBus from '../../utils/EventBus'
 
 class MainView extends Component {
   constructor(props) {
@@ -70,12 +71,6 @@ class MainView extends Component {
   render(){
       return (
           <>
-          {/* <svg id='top-bar' width='100%' height='25px' >
-            <text x='0' y='0' fill='black' fontSize='13' dy='13' dx='10' dominantBaseline="middle">主视图</text>
-            <rect x='0' y='23' width='100%' height='1' fill='#e5e9f2'></rect>
-            <rect id='day-switch' x='100' y='0' width='15' height='15' fill='black'>主视图</rect>
-            <rect id='country-switch' x='200' y='0' width='15' height='15' fill='red'>主视图</rect>
-          </svg> */}
           <TopBar>
               <span id='top-title'>主视图</span>
               <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} size="small"  checkedChildren="中国" unCheckedChildren="海外" defaultChecked onChange={this.switchCountry}/>
@@ -106,6 +101,7 @@ class MainView extends Component {
     const data = [this.state.overallW, this.state.overallD]
     const hot = ['TotalHot', 'totalHot']
     const number = ['world', 'china']
+    console.log(this.state.overallW, this.state.overallD, this.state.cases)
 
     //初始/默认数据：
     //时间轴：以天为单位，展示全部；
@@ -116,10 +112,10 @@ class MainView extends Component {
     var padding = this.state.isDay?5:10
     //长宽高常量设定
     var h2 = 25;
-    var margin2 = {top:15, right:60, bottom:20, left:40}
+    var margin2 = {top:15, right:60, bottom:20, left:60}
 
     var margin = {top:h2+margin2.top+margin2.bottom, right:margin2.right, bottom:30, left:margin2.left};
-    var w = 780 - margin.left - margin.right,
+    var w = 1020 - margin.left - margin.right,
         h = 265 - margin.top - margin.bottom;
 
     //比例尺
@@ -182,9 +178,10 @@ class MainView extends Component {
                   .on('end', ()=>{
                     const selection = d3.event.selection;
                     var dateRange = selection.map(x2.invert, x2);
-                
-                    // console.log(selection);
-                    // console.log(selection.map(x2.invert, x2));
+                    var dateFormat =d3.timeFormat("%Y-%m-%d"); 
+
+                    let begin = dateFormat(dateRange[0]);
+                    let end = dateFormat(dateRange[1]);
                     
                     //修改图标大小失败
                     // var days = Math.floor((dateRange[1].getTime() - dateRange[0].getTime())/(1000*60*60*24))
@@ -194,6 +191,8 @@ class MainView extends Component {
                 
                     x.domain(dateRange);
                     $plot.select('.axis.x').call(xAxis);
+
+                    EventBus.emit('time-brush', [begin, end]);
                   });
     var symbolkeys = [d3.symbolCircle, d3.symbolSquare, d3.symbolTriangle, d3.symbolStar, d3.symbolCross, d3.symbolWye];
     var symbolSize = this.state.isDay?80:200;
@@ -368,7 +367,6 @@ class MainView extends Component {
 
   getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
     var parseDate = d3.timeParse('%Y-%m-%d %H:%M:%S');
-    console.log(d)
     var _this = this;
     var tempWeek = d.week
     var tempDate = d[['begin', 'date'][this.state.isDay]]
@@ -382,8 +380,6 @@ class MainView extends Component {
         week: tempWeek
       },
     ).then((res)=>{
-        console.log(tempWeek)
-        console.log(d.day)
         var r = res.data.results
         r.forEach(e => {
           e.t = parseDate(e.t)
@@ -561,10 +557,15 @@ class MainView extends Component {
                         d3.select(this)
                             .classed('mouseon', false)
                     })
+                    .on('click', function(d){
+                      console.log(d)
+                      EventBus.emit('weibo-click', d.id)
+                    })
     $context.selectAll('.dmark')
         .attr("transform", d => {
           return `translate(${x3(d.t)}, ${y3(d.hot)})`;
         })
+
     //坐标轴绘制
     $context.append('g')
         .attr('class', 'axis x3');

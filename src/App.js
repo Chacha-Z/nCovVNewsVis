@@ -11,15 +11,12 @@ function App() {
   return (
     <>
       <Row style={{marginBottom:'4px'}}>
-        <Col span={6}>
-          <div className='content'></div>
-        </Col>
-        <Col span={12}>
+        <Col span={16}>
           <div className='content'>
             <MainView></MainView>
           </div>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <div className='content'></div>
         </Col>
       </Row>
