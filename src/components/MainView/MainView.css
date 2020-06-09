@@ -1,3 +1,7 @@
 .mouseon {
     opacity: 1;
 }
+
+.onfocus {
+    opacity: 1;
+}

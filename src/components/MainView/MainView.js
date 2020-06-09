@@ -16,10 +16,13 @@ class MainView extends Component {
         weekDetail: [],
         cases:[],
         isDay: 1,
-        isChina: 1
+        isChina: 1,
+        onFocusDay: '',
+        onFocusWeek: ''
     };
     this.switchDay = this.switchDay.bind(this);
     this.switchCountry = this.switchCountry.bind(this);
+    this.drawDetail = this.drawDetail.bind(this);
     
   }
 
@@ -98,7 +101,9 @@ class MainView extends Component {
 
   drawMainView(){
     const date = ['begin', 'date']
+    const date2 = ['week', 'date']
     const data = [this.state.overallW, this.state.overallD]
+    const stateFocus = [this.state.onFocusWeek, this.state.onFocusDay]
     const hot = ['TotalHot', 'totalHot']
     const number = ['world', 'china']
     console.log(this.state.overallW, this.state.overallD, this.state.cases)
@@ -294,7 +299,7 @@ class MainView extends Component {
           .attr('class', 'markP')
           .attr('d', symbol)
           .attr('fill', d=>color(d.classification))
-          .attr('opacity', '0.65')
+          .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.55')
     $plot.selectAll('.mark')
         .attr("transform", d => {
           return `translate(${x(d[date[this.state.isDay]])}, ${mainy(d[hot[this.state.isDay]])})`;
@@ -308,7 +313,17 @@ class MainView extends Component {
             d3.select(this).selectAll('.markP')
                 .classed('mouseon', false)
         })
-        .on('click', (d)=>{this.getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol)})
+        .on('click', (d)=>{
+          // d3.select(this).selectAll('.markP')
+          //     .classed('onfocus', true)
+
+          this.setState({onFocusDay: d[date[this.state.isDay]], onFocusWeek: d.week}, ()=>{
+            let statek = [this.state.onFocusWeek, this.state.onFocusDay]
+            $plot.selectAll('.markP')
+              .attr('opacity', d=>d[date2[this.state.isDay]]-statek[this.state.isDay]==0?'1': '0.55')
+          })
+          this.getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol)
+        })
 
     //坐标轴绘制
     $plot.append('g')
@@ -393,8 +408,10 @@ class MainView extends Component {
 
   }
   drawWeek($detail, day, date, w, h3, x3, y3, line3, xAxis3, color, symbol){
-    console.log(date)
 
+    const date2 = ['week', 'date']
+
+    var dateParse =d3.timeParse("%Y-%m-%d"); 
     var dateFormat =d3.timeFormat("%Y-%m-%d"); 
     var tempDate = dateFormat(date)
     if(day == undefined){
@@ -409,43 +426,43 @@ class MainView extends Component {
         key: 1,
         value: '周一',
         data: this.state.dayDetail.filter(e => e.day == 1),
-        date: dateFormat(d3.timeDay.offset(date, 1-day))
+        date: (d3.timeDay.offset(date, 1-day))
       }, 
       {
         key: 2,
         value: '周二',
         data: this.state.dayDetail.filter(e => e.day == 2),
-        date: dateFormat(d3.timeDay.offset(date, 2-day))
+        date: (d3.timeDay.offset(date, 2-day))
       }, 
       {
         key: 3,
         value: '周三',
         data: this.state.dayDetail.filter(e => e.day == 3),
-        date: dateFormat(d3.timeDay.offset(date, 3-day))
+        date: (d3.timeDay.offset(date, 3-day))
       }, 
       {
         key: 4,
         value: '周四',
         data: this.state.dayDetail.filter(e => e.day == 4),
-        date: dateFormat(d3.timeDay.offset(date, 4-day))
+        date: (d3.timeDay.offset(date, 4-day))
       }, 
       {
         key: 5,
         value: '周五',
         data: this.state.dayDetail.filter(e => e.day == 5),
-        date: dateFormat(d3.timeDay.offset(date, 5-day))
+        date: (d3.timeDay.offset(date, 5-day))
       }, 
       {
         key: 6,
         value: '周六',
         data: this.state.dayDetail.filter(e => e.day == 6),
-        date: dateFormat(d3.timeDay.offset(date, 6-day))
+        date: (d3.timeDay.offset(date, 6-day))
       }, 
       {
         key: 7,
         value: '周日',
         data: this.state.dayDetail.filter(e => e.day == 0),
-        date: dateFormat(d3.timeDay.offset(date, 7-day))
+        date: (d3.timeDay.offset(date, 7-day))
       }, 
     ]
     console.log(keys)
@@ -472,7 +489,15 @@ class MainView extends Component {
             $week.selectAll('rect')
                 .attr('width', d => d.key==e.key?0:w/7)
             $outer.select('.day-text')
-                .text(e.date)
+                .text(dateFormat(e.date))
+
+            //透明度反馈
+            this.setState({onFocusDay: e.date}, ()=>{
+              let stateK = [this.state.onFocusWeek, this.state.onFocusDay]
+              d3.selectAll('.markP')
+                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?'1': '0.55')
+            })
+
             this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
           })
     $week.append('text')
@@ -492,7 +517,15 @@ class MainView extends Component {
             $week.selectAll('rect')
                 .attr('width', d => d.key==e.key?0:w/7)
             $outer.select('.day-text')
-                .text(e.date)
+                .text(dateFormat(e.date))
+
+            //透明度反馈
+            this.setState({onFocusDay: e.date}, ()=>{
+              let stateK = [this.state.onFocusWeek, this.state.onFocusDay]
+              d3.selectAll('.markP')
+                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?'1': '0.55')
+            })
+
             this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
           })
     $outer.append('rect')
