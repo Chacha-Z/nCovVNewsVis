@@ -5,3 +5,18 @@
 .onfocus {
     opacity: 1;
 }
+
+
+.plottooltip {	
+    position: absolute;			
+    text-align: center;		
+    height: 50px;
+    width: 90px;			
+    padding: 10px;				
+    font: 12px sans-serif;		
+    color: snow;
+    background: rgb(46, 50, 56);	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;
+}
