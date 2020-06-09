@@ -3,7 +3,6 @@ import {  Row, Col  } from 'antd';
 import 'antd/dist/antd.css';
 import './App.css'
 import{
-  Header,
   MainView
 } from './components'
 
