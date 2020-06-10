@@ -28,7 +28,7 @@ function App() {
         </Col>
       </Row>
       <Row>
-        <Col span={10}>
+        <Col span={10} style={{height: '100%'}}>
           <div className='content'>
             <DetailText> </DetailText>
           </div>

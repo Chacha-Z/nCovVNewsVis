@@ -24,8 +24,7 @@ const type_icon = {
 
     '4': <svg t="1591715742447" class="icon" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14897" width="16" height="16"><path d="M1024.005978 313.807802 710.192198 313.807802 710.192198 0 313.808549 0 313.808549 313.807802 0 313.807802 0 710.192198 313.808549 710.192198 313.808549 1024 710.192198 1024 710.192198 710.192198 1024.005978 710.192198Z" fill="#b18d85" p-id="14898"></path></svg>,
 
-    '5': <svg t="1591715842555" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16413" width="16" height="16"><path d="M438.667077 591.098245 237.304589 0l155.338466 0 117.927933 407.002156 2.877733 0L631.376655 0l155.318756 0L585.352633 591.098245l0 432.901755-146.685556 0L438.667077 591.098245z" p-id="16414" fill="#8ecc8e"></path></svg>
-}
+'5':<svg width="16" height="16"><g transform="translate(8,8)"><path d="M3.238273644478706,1.8696181603494515L3.238273644478706,8.346165449306863L-3.238273644478706,8.346165449306863L-3.238273644478706,1.8696181603494513L-8.847128125527059,-1.3686554841292544L-5.608854481048353,-6.9775099651776085L0,-3.739236320698903L5.608854481048353,-6.9775099651776085L8.847128125527059,-1.3686554841292544Z" fill="#2ca02c" opacity="0.55"></path></g></svg>}
 
 export default class DetailText extends React.Component {
     constructor(props) {
@@ -87,33 +86,26 @@ export default class DetailText extends React.Component {
 
     render() {
         return (
-            <div>
-                {/* <Card title='微博详情' bordered={true}> */}
-                {/* <Row>
-                    <Col span={24}>col</Col>
-                     </Row> */}
+            <div style={{height: '100%'}} id='detail-text'>
                 <TopBar>
                     <span id='top-title'>微博详情</span>
                 </TopBar>
-                <p></p>
-                <Row>
+                <Row className='titlebox'>
                     <Col span={8}>
                         <Text strong> {type_key[this.state.classification]} {type_icon[this.state.classification]} </Text>
                     </Col>
-                    <Col span={12} offset={4}>{this.state.time}</Col>
+                    <Col span={12} offset={4}><span  style={{float: 'right'}} >{this.state.time}</span></Col>
                 </Row>
-                <p></p>
-                <Row>
-                    <Col span={24}>
+                <Row className='textbox' style={{height: '70%', overflow:'auto'}}>
+                    <Col span={24} >
                         {/* <Text strong>Ant Design</Text> */}
-                        <a href={this.state.path} target="_blank">
-                            {this.state.content}
+                        <a href={this.state.path} target="_blank" >
+                            <span>{this.state.content}</span>
                         </a>
                     </Col>
                 </Row>
-                <p></p>
-                <Row gutter={8}>
-                    <Col span={6}>
+                <Row gutter={8} className='footbox'>
+                    <Col span={6} >
                         <Tooltip title="点赞数">
                             <span> <LikeOutlined /> {this.state.like} </span>
                         </Tooltip>
