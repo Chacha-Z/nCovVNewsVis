@@ -87,7 +87,8 @@ export default class PieChart extends React.Component {
 
     getOption = () => {
         let option = {
-            backgroundColor: '#fff',
+            backgroundColor: '#3a3a38',
+            color:['#ebe57a','#9e9e9e','#957bbf'],
             title: {
                 //text: '用户评论情绪饼图',
                 //subtext: '纯属虚构',
@@ -146,8 +147,9 @@ export default class PieChart extends React.Component {
                     textStyle: {
                         normal: {
                             color: function () {
-                                var colors = ['#fda67e', '#81cacc', '#cca8ba', "#88cc81", "#82a0c5", '#fddb7e', '#735ba1', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-                                return colors[parseInt(Math.random() * 10)];
+                                // var colors = ['#fda67e', '#81cacc', '#cca8ba', "#88cc81", "#82a0c5", '#fddb7e', '#735ba1', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+                                var colors = ['#eecf79','#fba57d','#80c4c5','#bda39b','#86a7ce','#90caf9','#ff5252','#ffff8d',]
+                                return colors[parseInt(Math.random() * 7)];
                             }
                         }
                     },
@@ -172,7 +174,7 @@ export default class PieChart extends React.Component {
     render() {
         return (
 
-            <div style={{ height: '90%'}}>
+            <div id='Pie' style={{ height: '90%'}}>
                 <TopBar>
                     <span id='top-title'>评论情绪分析</span>
                 </TopBar>

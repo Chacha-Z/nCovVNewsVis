@@ -18,3 +18,16 @@
     cursor: pointer;
     color: rgb(47, 112, 209)
 }
+
+.ant-table {
+    background-color: #3a3a38;
+    color: white;
+}
+
+.rank-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0;
+    color: white;
+}
