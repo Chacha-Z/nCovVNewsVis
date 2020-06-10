@@ -77,7 +77,12 @@ export default class TypeLine extends React.Component {
             title: {
                 //text: '用户评论情绪饼图',
                 subtext: this.state.begin + ' ~ ' + this.state.end,
-                left: 'center'
+                left: 'center',
+                subtextStyle: {
+                    color: 'white',
+                    fontSize: 15,
+                }
+                
             },
             tooltip: {
                 trigger: 'axis',
@@ -98,7 +103,7 @@ export default class TypeLine extends React.Component {
                 },
                 axisLabel: {
                     textStyle: {
-                        color: '#000000'
+                        color: 'white'
                     }
                 }
             },

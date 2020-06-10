@@ -99,6 +99,9 @@ export default class PieChart extends React.Component {
                 formatter: '{b} : {c} ({d}%)'
             },
             legend: {
+                textStyle:{
+                    color:'white',
+                },
                 orient: 'vertical',
                 left: 10,
                 top: 10,

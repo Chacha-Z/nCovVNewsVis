@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
 a {
-    color: #7f8081;
+    color: white;
 }
 
 .ant-row.text-box {
@@ -19,4 +19,8 @@ a {
 #detail-text .footbox .ant-col {
     padding-top: 5px;
     text-align: center;
+}
+.ant-typography strong {
+    font-weight: 650;
+    color: white;
 }
