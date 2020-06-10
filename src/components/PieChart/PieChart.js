@@ -28,7 +28,6 @@ export default class PieChart extends React.Component {
                 this.uploadData(this.state.id)
             })
         })
-        this.uploadData(this.state.id)
     }
 
     uploadData(id){
