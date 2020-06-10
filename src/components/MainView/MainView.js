@@ -175,6 +175,7 @@ class MainView extends Component {
 
     //比例尺
     var color = d3.scaleOrdinal(d3.schemeCategory10);
+    const color2 = ['#f6d54a', '#f69846', '#ad46f3', '#ff3d3d', '#9daaff', '#6be990'] 
     var x = d3.scaleTime().range([padding, w-padding]);
     var mainy = d3.scaleLinear().range([h-padding, padding]);
     var casesy = d3.scaleLinear().range([h-padding, padding]);
@@ -329,8 +330,8 @@ class MainView extends Component {
           .datum(this.state.cases)
           .attr('class', 'backgroud')
           .attr('d', area)
-          .attr('fill', 'grey')
-          .attr('opacity', '0.15')
+          .attr('fill', 'white')
+          .attr('opacity', '0.2')
 
     //折线生成器
     $plot.append('g')
@@ -340,7 +341,7 @@ class MainView extends Component {
           .datum(data[this.state.isDay])
           .attr('class', 'dashlink')
           .attr('d', line)
-          .attr('stroke', 'grey')
+          .attr('stroke', 'white')
           .attr('stroke-dasharray', '5,5')
           .attr('fill', 'none')
     //形状生成器
@@ -357,8 +358,9 @@ class MainView extends Component {
           .append('path')
           .attr('class', 'markP')
           .attr('d', symbol)
-          .attr('fill', d=>color(d.classification))
-          .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.55')
+          .attr('fill', d=>color2[d.classification])
+          .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.75')
+          // .attr('opacity', 1)
 
     $plot.selectAll('.mark')
         .attr("transform", d => {
@@ -398,9 +400,9 @@ class MainView extends Component {
           this.setState({onFocusDay: d[date[this.state.isDay]], onFocusWeek: d.week}, ()=>{
             let statek = [this.state.onFocusWeek, this.state.onFocusDay]
             $plot.selectAll('.markP')
-              .attr('opacity', d=>d[date2[this.state.isDay]]-statek[this.state.isDay]==0?'1': '0.55')
+              .attr('opacity', d=>d[date2[this.state.isDay]]-statek[this.state.isDay]==0?'1': '0.75')
           })
-          this.getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol)
+          this.getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color2, symbol)
         })
 
     //坐标轴绘制
@@ -434,15 +436,15 @@ class MainView extends Component {
             .datum(this.state.cases)
             .attr('class', 'backgroud2')
             .attr('d', area2)
-            .attr('fill', 'grey')
-            .attr('opacity', '0.15')
+            .attr('fill', 'white')
+            .attr('opacity', '0.2')
     $timeline.append('g')
       .attr('class', 'line2')
       .append('path')
       .datum(data[this.state.isDay])
       .attr('class', 'dashlink2')
       .attr('d', line2)
-      .attr('stroke', 'grey')
+      .attr('stroke', 'white')
       .attr('stroke-dasharray', '5,5')
       .attr('fill', 'none')
 
@@ -465,16 +467,17 @@ class MainView extends Component {
     // }
     d3.selectAll(".brush").call(brush.move, [x2(x2.domain()[0]), x2(x2.domain()[1])]);
     //图标说明
-    this.drawLegend(lengendkeys, $plot, symbol, color, w, margin)
+    this.drawLegend(lengendkeys, $plot, symbol, color2, w, margin)
   }
 
-  drawLegend(lengendkeys, $plot, symbol, color, w, margin){
+  drawLegend(lengendkeys, $plot, symbol, color2, w, margin){
     symbol.size(80)
     //添加颜色标签
     const legend = $plot.append('g')
             .attr('class', 'plot-legend')
             .attr("font-family", "sans-serif")
-            .attr("font-size", 10)
+            .attr("font-size", 12)
+            .attr("fill", 'white')
             .attr('text-anchor', 'end')
             .selectAll("g")
             .data(lengendkeys)
@@ -482,8 +485,8 @@ class MainView extends Component {
             .attr("transform", (d, i) => `translate(${w+margin.left+20}, ${i*25+20})`);
     legend.append('path')
             .attr('d', symbol)
-            .attr('opacity', .7)
-            .attr('fill', (d, i) => color(i))
+            .attr('opacity', .75)
+            .attr('fill', (d, i) => color2[i])
             .attr('rx', 2);
     legend.append('text')
             .attr('x', 10)
@@ -495,7 +498,7 @@ class MainView extends Component {
             .text(d => d.text)
   }
 
-  getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
+  getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color2, symbol){
     console.log('getDetail')
     var parseDate = d3.timeParse('%Y-%m-%d %H:%M:%S');
     var _this = this;
@@ -519,11 +522,11 @@ class MainView extends Component {
           dayDetail: r,
         });
         console.log(r)
-        _this.drawWeek($detail, d.day, tempDate, w, h3, x3, y3, line3, xAxis3, color, symbol)
+        _this.drawWeek($detail, d.day, tempDate, w, h3, x3, y3, line3, xAxis3, color2, symbol)
     })
 
   }
-  drawWeek($detail, day, date, w, h3, x3, y3, line3, xAxis3, color, symbol){
+  drawWeek($detail, day, date, w, h3, x3, y3, line3, xAxis3, color2, symbol){
 
     const date2 = ['week', 'date']
 
@@ -595,7 +598,7 @@ class MainView extends Component {
           .attr('width', d => d.key==day?0:w/7)
           .attr('height', 18)
           .attr('fill', 'white')
-          .attr('stroke', 'grey')
+          .attr('opacity', '0.75')
           .on('mouseover', function(d){
               d3.select(this)
                   .style('cursor', 'pointer')
@@ -605,25 +608,26 @@ class MainView extends Component {
                 .attr('width', d => d.key==e.key?0:w/7)
             $outer.select('.day-text')
                 .text(dateFormat(e.date))
+            $week.selectAll('text')
+              .style('fill', d => d.key==e.key?'white':'#000')
 
             //透明度反馈
             this.setState({onFocusDay: e.date}, ()=>{
               let stateK = [this.state.onFocusWeek, this.state.onFocusDay]
               d3.selectAll('.markP')
-                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?'1': '0.55')
+                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?1: .75)
             })
 
-            this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
+            this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color2, symbol)
           })
     $week.append('text')
           .attr('class', 'week-text')
           .attr('x', (d, i) => i*(w/7)+(w/14))
           .attr('y', 5)
-          .attr('fill', 'black')
           .text(d => d.value)
           .style('text-anchor', 'middle')
           .style('font-size', '12')
-          .style('fill', 'grey')
+          .style('fill', d => d.key==day?'white':'#000')
           .on('mouseover', function(d){
               d3.select(this)
                   .style('cursor', 'pointer')
@@ -633,15 +637,17 @@ class MainView extends Component {
                 .attr('width', d => d.key==e.key?0:w/7)
             $outer.select('.day-text')
                 .text(dateFormat(e.date))
+            $week.selectAll('text')
+                .style('fill', d => d.key==e.key?'white':'#000')
 
             //透明度反馈
             this.setState({onFocusDay: e.date}, ()=>{
               let stateK = [this.state.onFocusWeek, this.state.onFocusDay]
               d3.selectAll('.markP')
-                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?'1': '0.55')
+                .attr('opacity', d => d[date2[this.state.isDay]]-stateK[this.state.isDay]==0?1: .75)
             })
 
-            this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color, symbol)
+            this.drawDetail($context, e.data, x3, y3, h3, line3, xAxis3, color2, symbol)
           })
     $outer.append('rect')
           .attr('x', 0)
@@ -649,21 +655,20 @@ class MainView extends Component {
           .attr('width', w)
           .attr('height', h3+35)
           .attr('fill', 'none')
-          .attr('stroke', 'grey')
+          .attr('stroke', 'white')
     $outer.append('text')
           .attr('class', 'day-text')
           .attr('x', -30)
           .attr('y', -10)
-          .attr('fill', 'black')
+          .attr('fill', 'white')
           .text(tempDate)
           .style('text-anchor', 'middle')
           .style('font-size', '12')
-          .style('fill', 'grey')
           .attr('transform', "rotate(270)")
           
-    this.drawDetail($context, keys[day-1].data, x3, y3, h3, line3, xAxis3, color, symbol)
+    this.drawDetail($context, keys[day-1].data, x3, y3, h3, line3, xAxis3, color2, symbol)
   }
-  drawDetail($context, weekdata, x3, y3, h3, line3, xAxis3, color, symbol){
+  drawDetail($context, weekdata, x3, y3, h3, line3, xAxis3, color2, symbol){
     $context.selectAll('g').remove();
     symbol.size(60)
     // this.getData()
@@ -682,7 +687,7 @@ class MainView extends Component {
         .datum(weekdata)
         .attr('class', 'ddashlink')
         .attr('d', line3)
-        .attr('stroke', 'grey')
+        .attr('stroke', 'white')
         .attr('stroke-dasharray', '5,5')
         .attr('fill', 'none')
     const marks = $context.append('g')
@@ -693,11 +698,11 @@ class MainView extends Component {
                     .append('g')
                     .attr('class', 'dmark')
                     .attr('id', (d, i)=>'dmark'+i)
-    marks.append('path')
-          .attr('class', 'dmarkP')
-          .attr('d', symbol)
-          .attr('fill', d=>color(d.classification))
-          .attr('opacity', '0.65')
+                    .append('path')
+                    .attr('class', 'dmarkP')
+                    .attr('d', symbol)
+                    .attr('fill', d=>color2[d.classification])
+                    .attr('opacity', .75)
     marks.on('mouseover', function(d){
       d3.select(this)
           .style('cursor', 'pointer')
@@ -728,7 +733,7 @@ class MainView extends Component {
       
       this.setState({onFocusWeibo: d.id}, ()=>{
         $context.selectAll('.dmarkP')
-          .attr('opacity', d=>d.id==this.state.onFocusWeibo?'1': '0.55')
+          .attr('opacity', d=>d.id==this.state.onFocusWeibo?'1': '0.75')
       })
 
       EventBus.emit('weibo-click', d.id)

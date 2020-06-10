@@ -10,7 +10,8 @@
 }
 
 .content {
-    background: #ffffff;
+    background: #3a3a38;
     height: 100%;
     margin: 5px 2px;
+    color: white;
 }
