@@ -263,7 +263,7 @@ class MainView extends Component {
     var h3 = obj.clientHeight*0.18;
     var x3 = d3.scaleTime().range([padding3, w-padding3]);
     var y3 = d3.scaleLinear().range([h3-padding3, padding3+10]);
-    var xAxis3 = d3.axisBottom(x3);
+    var xAxis3 = d3.axisBottom(x3).tickFormat(d3.timeFormat('%H:%M'));
     if(d3.select("#detail-view").selectAll('g').empty()){
       var $detail = d3.select("#detail-view")
                       .attr('width', w + margin3.left + margin3.right)
