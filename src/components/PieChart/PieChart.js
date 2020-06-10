@@ -5,6 +5,7 @@ import axios from 'axios'
 import echarts from 'echarts';
 import ReactEcharts from 'echarts-for-react';
 import 'echarts-wordcloud'
+import EventBus from '../../utils/EventBus'
 
 export default class PieChart extends React.Component {
     constructor(props) {
@@ -17,21 +18,29 @@ export default class PieChart extends React.Component {
     }
 
     componentDidMount() {
-        const _this = this;
+        EventBus.addListener('weibo-click', (id)=>{
+            this.setState({id: id}, ()=>{
+                this.uploadData(this.state.id)
+            })
+        })
+        this.uploadData(this.state.id)
+    }
+
+    uploadData(id){
         axios.post("http://120.27.243.210:3000/getWeibo",
             //参数列表
             {
-                'id': _this.state.id
+                'id': id
             }
         ).then((res) => {
             //console.log(res);
             let e_rawdata = res.data.result.emotion;
             let w_rawdata = res.data.result.cloud;
             //console.log(rawdata);
-            let emotionData = _this.emotionDataParse(e_rawdata);
-            let wordData = _this.wordDataParse(w_rawdata);
+            let emotionData = this.emotionDataParse(e_rawdata);
+            let wordData = this.wordDataParse(w_rawdata);
             //console.log(data);
-            _this.setState({
+            this.setState({
                 emotionData: emotionData,
                 wordData: wordData
             }, () => {

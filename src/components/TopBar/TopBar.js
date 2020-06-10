@@ -10,13 +10,13 @@ class TopBar extends Component {
   }
 
   componentDidMount(){
-    EventBus.addListener('weibo-click', (id)=>{
-      console.log('id: ', id)
-    })
+    // EventBus.addListener('weibo-click', (id)=>{
+    //   console.log('id: ', id)
+    // })
 
-    EventBus.addListener('time-brush', (r)=>{
-      console.log('r: ', r)
-    })
+    // EventBus.addListener('time-brush', (r)=>{
+    //   console.log('r: ', r)
+    // })
 
   }
 

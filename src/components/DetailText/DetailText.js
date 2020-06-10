@@ -5,6 +5,8 @@ import './DetailText.css'
 import TopBar from '../TopBar/TopBar';
 import { Typography, Card, Statistic, Tooltip } from 'antd';
 import { LikeOutlined, RollbackOutlined, MessageOutlined, FireOutlined } from '@ant-design/icons';
+import { thresholdScott } from 'd3';
+import EventBus from '../../utils/EventBus'
 
 
 const { Text, Link } = Typography;
@@ -40,30 +42,38 @@ export default class DetailText extends React.Component {
     }
 
     componentDidMount() {
-        const _this = this;
+        EventBus.addListener('weibo-click', (id)=>{
+            this.setState({id: id}, ()=>{
+                this.uploadData(this.state.id)
+            })
+        })
+        this.uploadData(this.state.id)
+    }
+
+    uploadData(id){
         axios.post("http://120.27.243.210:3000/getWeibo",
             //参数列表
             {
-                'id': _this.state.id
+                'id': id
             }
         ).then((res) => {
             console.log(res);
             let rawdata = res.data.result;
 
-            _this.setState(
-                {
-                    id: rawdata.id,
-                    path: rawdata.path,
-                    classification: rawdata.classification,
-                    content: rawdata.content,
-                    like: rawdata.like,
-                    comment: rawdata.comment,
-                    transmit: rawdata.transmit,
-                    hot: rawdata.hot,
-                    time: rawdata.t,
-                }, () => {
-                    console.log(this.state);
-                })
+            this.setState(
+            {
+                id: rawdata.id,
+                path: rawdata.path,
+                classification: rawdata.classification,
+                content: rawdata.content,
+                like: rawdata.like,
+                comment: rawdata.comment,
+                transmit: rawdata.transmit,
+                hot: rawdata.hot,
+                time: rawdata.t,
+            }, () => {
+                console.log(this.state);
+            })
         })
     }
 
