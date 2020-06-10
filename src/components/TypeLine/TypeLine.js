@@ -3,41 +3,55 @@ import './TypeLine.css'
 import TopBar from '../TopBar/TopBar';
 import axios from 'axios'
 import ReactEcharts from 'echarts-for-react';
+import EventBus from '../../utils/EventBus'
 
-const icon = {}
+const color = ['#63a0cb','#eba0d4','#ba9dd4','#e88788','#b18d85','#8ecc8e']
 
 export default class TypeLine extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            begin: "2020-02-07",
-            end: "2020-02-10",
-            data: []
+            begin: "2020-01-01",
+            end: "2020-05-17",
+            data: [],
+            max: 0
         }
     }
 
     componentDidMount() {
-        const _this = this;
+        EventBus.addListener('time-brush', (r) => {
+            console.log('r: ', r)
+            this.setState({begin: r[0],end:r[1]}, ()=>{
+                this.uploadData(this.state.begin, this.state.end)
+            })
+        })
+        this.uploadData(this.state.begin, this.state.end)
+    }
+
+    uploadData(begin, end){
+         const _this = this;
         axios.post("http://120.27.243.210:3000/postTime",
             //参数列表
             {
-                'begin': _this.state.begin,
-                'end': _this.state.end
+                'begin': begin,
+                'end': end
             }
         ).then((res) => {
-            //console.log(res);
+            console.log(res);
             let classification = res.data.classification;
             let data = _this.dataParse(classification);
-
+            console.log(data)
+            let max = _this.getMaxType(classification);
+            console.log(max)
             _this.setState(
                 {
-                    data: data
+                    data: data,
+                    max: max
                 }, () => {
                     console.log(this.state);
                 })
         })
     }
-
     dataParse(classification) {
         let data = [];
         for (let i in classification) {
@@ -46,8 +60,26 @@ export default class TypeLine extends React.Component {
         return data;
     }
 
+    getMaxType(data){
+        let temp = data[0]
+        let max = 0
+        for (let i in data){
+            if (data[i] > temp){
+                temp = data[i]
+                max = i
+            }
+        }
+        return max
+    }
+
     getOption = () => {
+        //const _this = this;
         let option = {
+            title: {
+                //text: '用户评论情绪饼图',
+                subtext: this.state.begin + ' ~ ' + this.state.end,
+                left: 'center'
+            },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -67,7 +99,7 @@ export default class TypeLine extends React.Component {
                 },
                 axisLabel: {
                     textStyle: {
-                        color: '#e54035'
+                        color: '#000000'
                     }
                 }
             },
@@ -85,7 +117,7 @@ export default class TypeLine extends React.Component {
                     show: false
                 }
             },
-            color: ['#e54035'],
+            color: [color[this.state.max]],
             series: [{
                 name: 'hill',
                 type: 'pictorialBar',
@@ -150,7 +182,7 @@ export default class TypeLine extends React.Component {
             // <div style={{ height: '220px', width: '480px' }}> 
             <div style={{ height: '100%'}}>
                 <TopBar>
-                    <span id='type-title'>事件类别统计</span>
+                    <span id='top-title'>事件类别统计</span>
                 </TopBar>
                 <ReactEcharts option={this.getOption()} />
             </div>

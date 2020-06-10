@@ -6,6 +6,7 @@ import './DetailText.css'
 import TopBar from '../TopBar/TopBar';
 import { Typography, Card, Statistic, Tooltip } from 'antd';
 import { LikeOutlined, RollbackOutlined, MessageOutlined, FireOutlined } from '@ant-design/icons';
+import { thresholdScott } from 'd3';
 
 
 const { Text, Link } = Typography;
@@ -30,8 +31,8 @@ export default class DetailText extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            //id: '2020032013163140',
-            id: '',
+            id: '2020032013163140', //初始值
+            //id: '',
             path: '',
             classification: '',
             content: '',
@@ -44,39 +45,43 @@ export default class DetailText extends React.Component {
     }
 
     componentDidMount() {
-        EventBus.addListener('weibo-click', (id) => {
-            this.setState({ id: id }, () => {
-                console.log('id: ', this.state.id);
-                this.drawChart();
+        EventBus.addListener('weibo-click', (id)=>{
+            this.setState({id: id}, ()=>{
+                this.uploadData(this.state.id)
             })
         })
+        EventBus.addListener('rank-click', (id)=>{
+            this.setState({id: id}, ()=>{
+                this.uploadData(this.state.id)
+            })
+        })
+        this.uploadData(this.state.id)
     }
 
-    drawChart() {
-        const _this = this;
+    uploadData(id){
         axios.post("http://120.27.243.210:3000/getWeibo",
             //参数列表
             {
-                'id': _this.state.id
+                'id': id
             }
         ).then((res) => {
             console.log(res);
             let rawdata = res.data.result;
 
-            _this.setState(
-                {
-                    id: rawdata.id,
-                    path: rawdata.path,
-                    classification: rawdata.classification,
-                    content: rawdata.content,
-                    like: rawdata.like,
-                    comment: rawdata.comment,
-                    transmit: rawdata.transmit,
-                    hot: rawdata.hot,
-                    time: rawdata.t,
-                }, () => {
-                    console.log(this.state);
-                })
+            this.setState(
+            {
+                id: rawdata.id,
+                path: rawdata.path,
+                classification: rawdata.classification,
+                content: rawdata.content,
+                like: rawdata.like,
+                comment: rawdata.comment,
+                transmit: rawdata.transmit,
+                hot: rawdata.hot,
+                time: rawdata.t,
+            }, () => {
+                console.log(this.state);
+            })
         })
     }
 
@@ -88,7 +93,7 @@ export default class DetailText extends React.Component {
                     <Col span={24}>col</Col>
                      </Row> */}
                 <TopBar>
-                    <span id='detail-title'>微博详情</span>
+                    <span id='top-title'>微博详情</span>
                 </TopBar>
                 <p></p>
                 <Row>

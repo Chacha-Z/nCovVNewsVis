@@ -74,18 +74,19 @@ class MainView extends Component {
 
   render(){
       return (
-          <>
-          <TopBar>
-              <span id='top-title'>主视图</span>
-              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
-                size="small"  checkedChildren="中国疫情背景" unCheckedChildren="海外疫情背景" defaultChecked onChange={this.switchCountry}/>
-              <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
-                size="small"  checkedChildren="天视图" unCheckedChildren="周视图" defaultChecked onChange={this.switchDay}/>
-          </TopBar>
-          <svg id='main-view'></svg>
-          <svg id="detail-view">
-          </svg>
-          </>
+          <div className='container'>
+            <TopBar>
+                <span id='top-title'>主视图</span>
+                <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
+                  size="small"  checkedChildren="中国疫情背景" unCheckedChildren="海外疫情背景" defaultChecked onChange={this.switchCountry}/>
+                <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
+                  size="small"  checkedChildren="天视图" unCheckedChildren="周视图" defaultChecked onChange={this.switchDay}/>
+            </TopBar>
+            <svg id='main-view'></svg>
+            <div className='plottooltip' style={{opacity: '0'}}></div>
+            <svg id="detail-view"></svg>
+            <div className='detailtooltip' style={{opacity: '0'}}></div>
+          </div>
       );
   }
 
@@ -111,6 +112,32 @@ class MainView extends Component {
     const number = ['world', 'china']
     console.log(this.state.overallW, this.state.overallD, this.state.cases)
 
+    const lengendkeys = [
+      {
+        classification: 0,
+        text: '疫情情况',
+      },
+      {
+        classification: 1,
+        text: '药品研究',
+      },
+      {
+        classification: 2,
+        text: '复工开学',
+      },
+      {
+        classification: 3,
+        text: '社会人文',
+      },
+      {
+        classification: 4,
+        text: '政府作为',
+      },
+      {
+        classification: 5,
+        text: '国外疫况',
+      }
+    ];
 
     var obj = document.getElementById("mainview");
     console.log(obj.clientWidth + "," + obj.clientHeight);
@@ -151,6 +178,8 @@ class MainView extends Component {
                     .append("g")
                     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
+    const $tooltip = d3.select('.plottooltip');
+    
     //坐标轴
     const xAxis = d3.axisTop()
                     .scale(x)
@@ -234,7 +263,7 @@ class MainView extends Component {
     var h3 = obj.clientHeight*0.18;
     var x3 = d3.scaleTime().range([padding3, w-padding3]);
     var y3 = d3.scaleLinear().range([h3-padding3, padding3+10]);
-    var xAxis3 = d3.axisBottom(x3);
+    var xAxis3 = d3.axisBottom(x3).tickFormat(d3.timeFormat('%H:%M'));
     if(d3.select("#detail-view").selectAll('g').empty()){
       var $detail = d3.select("#detail-view")
                       .attr('width', w + margin3.left + margin3.right)
@@ -311,18 +340,39 @@ class MainView extends Component {
           .attr('d', symbol)
           .attr('fill', d=>color(d.classification))
           .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.55')
+
+    console.log('this:' , this)
+
     $plot.selectAll('.mark')
         .attr("transform", d => {
           return `translate(${x(d[date[this.state.isDay]])}, ${mainy(d[hot[this.state.isDay]])})`;
         })
         .on('mouseover', function(d){
-            d3.select(this).selectAll('.markP')
-                .style('cursor', 'pointer')
-                .classed('mouseon', true)
+
+          d3.select(this).selectAll('.markP')
+              .style('cursor', 'pointer')
+              .classed('mouseon', true)
+
+          //鼠标悬浮框
+          $tooltip.transition()
+                  .duration(100)
+                  .style('opacity', .7)
+          let container = $plot.node()
+          let coordinates = d3.mouse(container);
+
+          // console.log(coordinates)
+          $tooltip.html(d3.timeFormat('%Y-%m-%d')(d.date) + '<br/>' + lengendkeys[d.classification].text)
+              .style('left', (coordinates[0])+'px')
+              .style('top', (coordinates[1])+'px')
+
         })
         .on("mouseout", function(d) {	
             d3.select(this).selectAll('.markP')
                 .classed('mouseon', false)
+        
+            $tooltip.transition()		
+                    .duration(200)		
+                    .style("opacity", 0);	
         })
         .on('click', (d)=>{
           // d3.select(this).selectAll('.markP')
@@ -391,37 +441,11 @@ class MainView extends Component {
   
 
     //图标说明
-    this.drawLegend($plot, symbol, color, w, margin)
+    this.drawLegend(lengendkeys, $plot, symbol, color, w, margin)
   }
 
-  drawLegend($plot, symbol, color, w, margin){
+  drawLegend(lengendkeys, $plot, symbol, color, w, margin){
     symbol.size(80)
-    const keys = [
-      {
-        classification: 0,
-        text: '疫情情况',
-      },
-      {
-        classification: 1,
-        text: '药品研究',
-      },
-      {
-        classification: 2,
-        text: '复工开学',
-      },
-      {
-        classification: 3,
-        text: '社会人文',
-      },
-      {
-        classification: 4,
-        text: '政府作为',
-      },
-      {
-        classification: 5,
-        text: '国外疫况',
-      }
-    ];
     //添加颜色标签
     const legend = $plot.append('g')
             .attr('class', 'plot-legend')
@@ -429,7 +453,7 @@ class MainView extends Component {
             .attr("font-size", 10)
             .attr('text-anchor', 'end')
             .selectAll("g")
-            .data(keys)
+            .data(lengendkeys)
             .enter().append("g")
             .attr("transform", (d, i) => `translate(${w+margin.left+20}, ${i*25+20})`);
     legend.append('path')
@@ -619,6 +643,8 @@ class MainView extends Component {
     symbol.size(60)
     // this.getData()
 
+    const $detailtooltip = d3.select('.detailtooltip');
+    const $container = d3.select('.container');
     //比例尺值域设置
     x3.domain([d3.min(weekdata, d=>d.t), d3.max(weekdata, d=>d.t)])
     y3.domain([d3.min(weekdata, d=>d.hot), d3.max(weekdata, d=>d.hot)])
@@ -650,10 +676,27 @@ class MainView extends Component {
                         d3.select(this)
                             .style('cursor', 'pointer')
                             .classed('mouseon', true)
+
+                        //鼠标悬浮框
+                        $detailtooltip.transition()
+                                .duration(100)
+                                .style('opacity', .7)
+                        let container = $container.node()
+                        console.log(container)
+                        let coordinates = d3.mouse(container);
+              
+                        // console.log(coordinates)
+                        $detailtooltip.html(d3.timeFormat('%H:%M:%S')(d.t) + '<br/>' + d.content)
+                            .style('left', (coordinates[0]+10)+'px')
+                            .style('top', (coordinates[1]-30)+'px')
                     })
                     .on('mouseout', function(d){
                         d3.select(this)
                             .classed('mouseon', false)
+                            
+                        $detailtooltip.transition()		
+                              .duration(200)		
+                              .style("opacity", 0);	
                     })
                     .on('click', d=>{
                       
