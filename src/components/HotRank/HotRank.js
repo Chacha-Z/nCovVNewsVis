@@ -127,6 +127,7 @@ export default class HotRank extends React.Component {
                 <Table
                     size="small"
                     pagination={false}
+                    //bordered
                     title={() => <div className='rank-title'>{this.state.begin} ~ {this.state.end}</div>}
                     columns={columns}
                     showHeader={false}
