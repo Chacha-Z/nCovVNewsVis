@@ -74,7 +74,7 @@ class MainView extends Component {
 
   render(){
       return (
-          <>
+          <div className='container'>
             <TopBar>
                 <span id='top-title'>主视图</span>
                 <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
@@ -84,9 +84,9 @@ class MainView extends Component {
             </TopBar>
             <svg id='main-view'></svg>
             <div className='plottooltip' style={{opacity: '0'}}></div>
-            <svg id="detail-view">
-            </svg>
-          </>
+            <svg id="detail-view"></svg>
+            <div className='detailtooltip' style={{opacity: '0'}}></div>
+          </div>
       );
   }
 
@@ -179,6 +179,7 @@ class MainView extends Component {
                     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
     const $tooltip = d3.select('.plottooltip');
+    
     //坐标轴
     const xAxis = d3.axisTop()
                     .scale(x)
@@ -642,6 +643,8 @@ class MainView extends Component {
     symbol.size(60)
     // this.getData()
 
+    const $detailtooltip = d3.select('.detailtooltip');
+    const $container = d3.select('.container');
     //比例尺值域设置
     x3.domain([d3.min(weekdata, d=>d.t), d3.max(weekdata, d=>d.t)])
     y3.domain([d3.min(weekdata, d=>d.hot), d3.max(weekdata, d=>d.hot)])
@@ -673,10 +676,27 @@ class MainView extends Component {
                         d3.select(this)
                             .style('cursor', 'pointer')
                             .classed('mouseon', true)
+
+                        //鼠标悬浮框
+                        $detailtooltip.transition()
+                                .duration(100)
+                                .style('opacity', .7)
+                        let container = $container.node()
+                        console.log(container)
+                        let coordinates = d3.mouse(container);
+              
+                        // console.log(coordinates)
+                        $detailtooltip.html(d3.timeFormat('%H:%M:%S')(d.t) + '<br/>' + d.content)
+                            .style('left', (coordinates[0]+10)+'px')
+                            .style('top', (coordinates[1]-30)+'px')
                     })
                     .on('mouseout', function(d){
                         d3.select(this)
                             .classed('mouseon', false)
+                            
+                        $detailtooltip.transition()		
+                              .duration(200)		
+                              .style("opacity", 0);	
                     })
                     .on('click', d=>{
                       

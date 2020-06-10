@@ -20,3 +20,23 @@
     border-radius: 8px;			
     pointer-events: none;
 }
+
+.detailtooltip {	
+    position: absolute;			
+    text-align: center;		
+    height: 93px;
+    width: 150px;			
+    padding: 10px;				
+    font: 12px sans-serif;		
+    color: snow;
+    background: rgb(46, 50, 56);	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;
+    
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:5; 
+    overflow:hidden; 
+}
