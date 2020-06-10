@@ -11,8 +11,8 @@ export default class TypeLine extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            begin: "2020-01-01",
-            end: "2020-05-17",
+            begin: "",
+            end: "",
             data: [],
             max: 0
         }
@@ -25,7 +25,6 @@ export default class TypeLine extends React.Component {
                 this.uploadData(this.state.begin, this.state.end)
             })
         })
-        this.uploadData(this.state.begin, this.state.end)
     }
 
     uploadData(begin, end){

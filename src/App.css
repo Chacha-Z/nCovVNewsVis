@@ -2,9 +2,10 @@
 
 .ant-row:first-child {
     height: 58%;
+    overflow: hidden;
 }
 .ant-row:last-child {
-    height: 40%;
+    height: 41%;
     overflow: hidden;
 }
 

@@ -1,1 +1,20 @@
 @import '~antd/dist/antd.css';
+.ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
+    /* padding: 7.9px 8px */
+}
+
+.rank-title {
+    text-align: center; 
+    font-size: 12px; 
+    padding: 0;
+    color: grey;
+}
+
+.ant-table.ant-table-small .ant-table-title {
+    padding: 3px 0;
+}
+
+.ant-table-row:hover{
+    cursor: pointer;
+    color: rgb(47, 112, 209)
+}

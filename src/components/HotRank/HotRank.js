@@ -27,11 +27,13 @@ const columns = [
         dataIndex: 'rank',
         key: 'rank',
         //render: text => {text},
+        width: 35,
     },
     {
         //title: 'Title',
         dataIndex: 'title',
         key: 'title',
+        ellipsis: true,
     },
     // {
     //     //title: 'Title',
@@ -45,15 +47,16 @@ const columns = [
             <>
                 {icon}
             </>
-        )
+        ),
+        width: 50,
     }]
 
 export default class HotRank extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            begin: "2020-01-01",
-            end: "2020-05-17",
+            begin: "",
+            end: "",
             rank: [],
             data: []
         }
@@ -66,7 +69,6 @@ export default class HotRank extends React.Component {
                 this.uploadData(this.state.begin, this.state.end)
             })
         })
-        this.uploadData(this.state.begin, this.state.end)
     }
 
     uploadData(begin, end) {
@@ -104,7 +106,7 @@ export default class HotRank extends React.Component {
                 rank: Number(i) + 1,
                // hot: rank[i].hot,
                 //title: content.substring(content.indexOf("【") + 1, content.indexOf("】")),
-                title: this.titleParse(content),
+                title: content,
                 //id: rank[i].id,
                 //classification: rank[i].classification,
                 icon: type_icon[rank[i].classification],
@@ -113,18 +115,6 @@ export default class HotRank extends React.Component {
         console.log(data);
         return data;
     }
-
-    titleParse(str) {
-        if (str.length > 25) {
-            //console.log(str.substring(0, 30));
-            return str.substring(0, 35) + '...';
-        } else {
-            return str + '...';
-        }
-    }
-
-
-
 
     render() {
         return (
@@ -137,34 +127,25 @@ export default class HotRank extends React.Component {
                 <Table
                     size="small"
                     pagination={false}
-                    title={() => <div style={{ textAlign: 'center' }}>{this.state.begin} ~ {this.state.end}</div>}
+                    title={() => <div className='rank-title'>{this.state.begin} ~ {this.state.end}</div>}
                     columns={columns}
+                    showHeader={false}
                     dataSource={this.state.data}
+                    
                     onRow={(record, index) => {
                         return {
                             onClick: () => {
-                                //console.log(record, index)
-                                //console.log(this.state.rank)
                                 let id = this.state.rank[Number(index)].id                 
                                 console.log(id)
                                 EventBus.emit('rank-click', id)
                             },  //点击行
                             onMouseEnter: () => {
-
+                                //鼠标样式
+                                
                             }, 
                         }
                     }}
                 />
-                {/* <List
-                    size="small"
-                    header={<div style={{ textAlign: 'center' }}>{this.state.begin} ~ {this.state.end}</div>}
-                    //bordered
-                    dataSource={this.state.data}
-                    renderItem={item =>
-                        <List.Item>
-                            {item.rank}  {item.title}  {item.icon}
-                        </List.Item>}
-                /> */}
 
             </div>
         )

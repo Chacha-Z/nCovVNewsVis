@@ -19,7 +19,8 @@ class MainView extends Component {
         isChina: 1,
         onFocusDay: '',
         onFocusWeek: -1,
-        onFocusWeibo: -1
+        onFocusWeibo: -1,
+        brushRange: [],
     };
     this.switchDay = this.switchDay.bind(this);
     this.switchCountry = this.switchCountry.bind(this);
@@ -223,6 +224,8 @@ class MainView extends Component {
                       return ;
                     }
                     var dateRange = selection.map(x2.invert, x2);
+                    // console.log(dateRange)
+                    this.setState({brushRange: dateRange})
                     var dateFormat =d3.timeFormat("%Y-%m-%d"); 
 
                     let begin = dateFormat(dateRange[0]);
@@ -239,6 +242,8 @@ class MainView extends Component {
 
                     EventBus.emit('time-brush', [begin, end]);
                   });
+
+    
     var symbolkeys = [d3.symbolCircle, d3.symbolSquare, d3.symbolTriangle, d3.symbolStar, d3.symbolCross, d3.symbolWye];
     var symbolSize = this.state.isDay?80:200;
     var symbol = d3.symbol().type(d=>symbolkeys[d.classification]).size(symbolSize);
@@ -340,8 +345,6 @@ class MainView extends Component {
           .attr('fill', d=>color(d.classification))
           .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.55')
 
-    console.log('this:' , this)
-
     $plot.selectAll('.mark')
         .attr("transform", d => {
           return `translate(${x(d[date[this.state.isDay]])}, ${mainy(d[hot[this.state.isDay]])})`;
@@ -435,10 +438,17 @@ class MainView extends Component {
       .call(xAxis2);
     
     //刷选工具
-    $timeline.append('g')
+    var brushNode = $timeline.append('g').attr('class', 'brush')
             .call(brush);
-  
-
+    //默认刷选
+    // if(this.state.brushRange.length == 0){
+    //   this.setState({brushRange: [x2(x2.domain()[0]), x2(x2.domain()[1])]}, () => {
+    //     d3.selectAll(".brush").call(brush.move, this.state.brushRange);
+    //   })
+    // }else{
+    //   d3.selectAll(".brush").call(brush.move, this.state.brushRange);
+    // }
+    d3.selectAll(".brush").call(brush.move, [x2(x2.domain()[0]), x2(x2.domain()[1])]);
     //图标说明
     this.drawLegend(lengendkeys, $plot, symbol, color, w, margin)
   }

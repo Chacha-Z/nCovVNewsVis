@@ -14,7 +14,7 @@ import {
 function App() {
   return (
     <>
-      <Row style={{ marginBottom: '4px' }}>
+      <Row style={{ marginBottom: '0px' }}>
         <Col span={16}>
           <div className='content' id='mainview'>
             <MainView></MainView>
