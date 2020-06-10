@@ -1,1 +1,5 @@
 @import '~antd/dist/antd.css';
+
+a {
+    color: #7f8081;
+}

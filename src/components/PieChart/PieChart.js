@@ -76,7 +76,7 @@ export default class PieChart extends React.Component {
         let option = {
             backgroundColor: '#fff',
             title: {
-                text: '用户评论情绪饼图',
+                //text: '用户评论情绪饼图',
                 //subtext: '纯属虚构',
                 left: 'center'
             },
@@ -86,7 +86,8 @@ export default class PieChart extends React.Component {
             },
             legend: {
                 orient: 'vertical',
-                left: 'left',
+                left: 10,
+                top: 10,
                 data: ['积极', '中性', '消极']
             },
             series: [
@@ -158,7 +159,7 @@ export default class PieChart extends React.Component {
     render() {
         return (
 
-            <div>
+            <div style={{ height: '90%'}}>
                 <TopBar>
                     <span id='top-title'>评论情绪分析</span>
                 </TopBar>
