@@ -91,7 +91,7 @@ export default class DetailText extends React.Component {
                 </TopBar>
                 <Row className='titlebox'>
                     <Col span={8}>
-                        <Text strong> {type_key[this.state.classification]} {type_icon[this.state.classification]} </Text>
+                        <Text> {type_key[this.state.classification]} {type_icon[this.state.classification]} </Text>
                     </Col>
                     <Col span={12} offset={4}><span  style={{float: 'right'}} >{this.state.time}</span></Col>
                 </Row>

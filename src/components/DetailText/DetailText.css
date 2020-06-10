@@ -20,7 +20,7 @@ a {
     padding-top: 5px;
     text-align: center;
 }
-.ant-typography strong {
-    font-weight: 650;
+.ant-typography {
+    /* font-weight: 650; */
     color: white;
 }
