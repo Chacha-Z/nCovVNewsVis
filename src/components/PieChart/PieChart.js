@@ -160,7 +160,7 @@ export default class PieChart extends React.Component {
 
             <div>
                 <TopBar>
-                    <span id='pie-title'>评论情绪分析</span>
+                    <span id='top-title'>评论情绪分析</span>
                 </TopBar>
                 <ReactEcharts option={this.getOption()} />
             </div>

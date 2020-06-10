@@ -145,7 +145,7 @@ export default class TypeLine extends React.Component {
         return (
             <div style={{ height: '220px', width: '480px' }}>
                 <TopBar>
-                    <span id='type-title'>事件类别统计</span>
+                    <span id='top-title'>事件类别统计</span>
                 </TopBar>
                 <ReactEcharts option={this.getOption()} />
             </div>

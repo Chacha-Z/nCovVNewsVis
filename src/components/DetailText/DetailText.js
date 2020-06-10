@@ -63,7 +63,7 @@ export default class DetailText extends React.Component {
                     <Col span={24}>col</Col>
                      </Row> */}
                 <TopBar>
-                    <span id='detail-title'>微博详情</span>
+                    <span id='top-title'>微博详情</span>
                 </TopBar>
                 <p></p>
                 <Row>

@@ -77,7 +77,7 @@ export default class HotRank extends React.Component {
             <div>
                 {/* <Card title='微博热榜' bordered={false}> */}
                 <TopBar>
-                    <span id='hotrank-title'>微博热榜</span>
+                    <span id='top-title'>微博热榜</span>
                 </TopBar>
                 <List
                     size="small"
