@@ -111,7 +111,7 @@ class MainView extends Component {
     e.dispatch('click')
     
     setTimeout(function(){
-      var d = d3.selectAll('#dmark0')
+      var d = d3.selectAll('#dmarkP0')
       console.log(d)
       d.dispatch('click')
     }, 1000);
@@ -166,7 +166,7 @@ class MainView extends Component {
     var padding = this.state.isDay?5:10
     //长宽高常量设定
     var h2 = obj.clientHeight*0.05;
-    var margin2 = {top:15, right:130, bottom:20, left:40}
+    var margin2 = {top:15, right:140, bottom:20, left:40}
 
     var margin = {top:h2+margin2.top+margin2.bottom, right:margin2.right, bottom:30, left:margin2.left};
     var w = obj.clientWidth  - margin.left - margin.right,
@@ -482,7 +482,7 @@ class MainView extends Component {
             .selectAll("g")
             .data(lengendkeys)
             .enter().append("g")
-            .attr("transform", (d, i) => `translate(${w+margin.left+20}, ${i*25+20})`);
+            .attr("transform", (d, i) => `translate(${w+margin.left+15}, ${i*25+20})`);
     legend.append('path')
             .attr('d', symbol)
             .attr('opacity', .75)
@@ -697,9 +697,9 @@ class MainView extends Component {
                     .enter()
                     .append('g')
                     .attr('class', 'dmark')
-                    .attr('id', (d, i)=>'dmark'+i)
                     .append('path')
                     .attr('class', 'dmarkP')
+                    .attr('id', (d, i)=>'dmarkP'+i)
                     .attr('d', symbol)
                     .attr('fill', d=>color2[d.classification])
                     .attr('opacity', .75)

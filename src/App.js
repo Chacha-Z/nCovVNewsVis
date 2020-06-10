@@ -14,7 +14,15 @@ import {
 function App() {
   return (
     <>
-      <Row style={{ marginBottom: '0px' }}>
+    <Row id='row' style={{ marginBottom: '0px' }}>
+      <Col span={24}>
+        <div className='content'>
+          <span id='main-title'>
+          <img src='/logo.png'/>基于社交媒体的疫情可视分析系统</span>
+        </div>
+      </Col>
+    </Row>
+      <Row id='row'  style={{ marginBottom: '0px' }}>
         <Col span={16}>
           <div className='content' id='mainview'>
             <MainView></MainView>
@@ -27,7 +35,7 @@ function App() {
 
         </Col>
       </Row>
-      <Row>
+      <Row id='row'>
         <Col span={10} style={{height: '100%'}}>
           <div className='content'>
             <DetailText> </DetailText>

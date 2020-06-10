@@ -1,6 +1,6 @@
 @import '~antd/dist/antd.css';
 .ant-table.ant-table-small .ant-table-title, .ant-table.ant-table-small .ant-table-footer, .ant-table.ant-table-small .ant-table-thead > tr > th, .ant-table.ant-table-small .ant-table-tbody > tr > td, .ant-table.ant-table-small tfoot > tr > th, .ant-table.ant-table-small tfoot > tr > td {
-    /* padding: 7.9px 8px */
+    padding: 6.5px 8px
 }
 
 .rank-title {

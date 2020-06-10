@@ -1,10 +1,15 @@
 @import '~antd/dist/antd.css';
 
-.ant-row:first-child {
-    height: 58%;
+#row:first-child {
+    height: 5%;
     overflow: hidden;
 }
-.ant-row:last-child {
+
+#row:nth-child(2) {
+    height: 54%;
+    overflow: hidden;
+}
+#row:last-child {
     height: 41%;
     overflow: hidden;
 }
@@ -14,4 +19,17 @@
     height: 100%;
     margin: 5px 2px;
     color: white;
+}
+
+#main-title {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 900;
+    text-align: center;
+    display: block;
+}
+
+
+#main-title img{
+    height: 30px;
 }
