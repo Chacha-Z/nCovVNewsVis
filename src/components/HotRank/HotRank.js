@@ -51,6 +51,7 @@ export default class HotRank extends React.Component {
                     console.log(this.state);
                 })
         })
+        
     }
 
     dataParse(rank) {

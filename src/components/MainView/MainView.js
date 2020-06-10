@@ -219,7 +219,6 @@ class MainView extends Component {
                   })
                   .on('end', ()=>{
                     const selection = d3.event.selection;
-                    console.log(selection)
                     if(selection == null){
                       return ;
                     }

@@ -5,6 +5,7 @@
 }
 .ant-row:last-child {
     height: 40%;
+    overflow: hidden;
 }
 
 .content {
