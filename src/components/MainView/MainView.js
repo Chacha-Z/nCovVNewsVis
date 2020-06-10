@@ -61,7 +61,9 @@ class MainView extends Component {
         _this.setState({
           cases: rawData3,
         });
+
         _this.drawMainView()
+        _this.triggerInital()
       }))
       .catch(function (error) {
         console.log(error);
@@ -103,8 +105,20 @@ class MainView extends Component {
       this.drawMainView()
     })
   }
+  triggerInital(){
+
+    var e = d3.selectAll('#mark0')
+    e.dispatch('click')
+    
+    setTimeout(function(){
+      var d = d3.selectAll('#dmark0')
+      console.log(d)
+      d.dispatch('click')
+    }, 1000);
+  }
 
   drawMainView(){
+    
     const date = ['begin', 'date']
     const data = [this.state.overallW, this.state.overallD]
     const date2 = ['week', 'date']
@@ -339,6 +353,7 @@ class MainView extends Component {
           .enter()
           .append('g')
           .attr('class', 'mark')
+          .attr('id', (d,i)=>'mark'+i)
           .append('path')
           .attr('class', 'markP')
           .attr('d', symbol)
@@ -481,6 +496,7 @@ class MainView extends Component {
   }
 
   getDetail(d, $detail, w, x3, y3, h3, line3, xAxis3, color, symbol){
+    console.log('getDetail')
     var parseDate = d3.timeParse('%Y-%m-%d %H:%M:%S');
     var _this = this;
     var tempWeek = d.week
@@ -676,47 +692,48 @@ class MainView extends Component {
                     .enter()
                     .append('g')
                     .attr('class', 'dmark')
-                    .append('path')
-                    .attr('class', 'dmarkP')
-                    .attr('d', symbol)
-                    .attr('fill', d=>color(d.classification))
-                    .attr('opacity', '0.65')
-                    .on('mouseover', function(d){
-                        d3.select(this)
-                            .style('cursor', 'pointer')
-                            .classed('mouseon', true)
+                    .attr('id', (d, i)=>'dmark'+i)
+    marks.append('path')
+          .attr('class', 'dmarkP')
+          .attr('d', symbol)
+          .attr('fill', d=>color(d.classification))
+          .attr('opacity', '0.65')
+    marks.on('mouseover', function(d){
+      d3.select(this)
+          .style('cursor', 'pointer')
+          .classed('mouseon', true)
 
-                        //鼠标悬浮框
-                        $detailtooltip.transition()
-                                .duration(100)
-                                .style('opacity', .7)
-                        let container = $container.node()
-                        console.log(container)
-                        let coordinates = d3.mouse(container);
-              
-                        // console.log(coordinates)
-                        $detailtooltip.html(d3.timeFormat('%H:%M:%S')(d.t) + '<br/>' + d.content)
-                            .style('left', (coordinates[0]+10)+'px')
-                            .style('top', (coordinates[1]-30)+'px')
-                    })
-                    .on('mouseout', function(d){
-                        d3.select(this)
-                            .classed('mouseon', false)
-                            
-                        $detailtooltip.transition()		
-                              .duration(200)		
-                              .style("opacity", 0);	
-                    })
-                    .on('click', d=>{
-                      
-                      this.setState({onFocusWeibo: d.id}, ()=>{
-                        $context.selectAll('.dmarkP')
-                          .attr('opacity', d=>d.id==this.state.onFocusWeibo?'1': '0.55')
-                      })
+      //鼠标悬浮框
+      $detailtooltip.transition()
+              .duration(100)
+              .style('opacity', .7)
+      let container = $container.node()
+      console.log(container)
+      let coordinates = d3.mouse(container);
 
-                      EventBus.emit('weibo-click', d.id)
+      // console.log(coordinates)
+      $detailtooltip.html(d3.timeFormat('%H:%M:%S')(d.t) + '<br/>' + d.content)
+          .style('left', (coordinates[0]+10)+'px')
+          .style('top', (coordinates[1]-30)+'px')
+    })
+    .on('mouseout', function(d){
+        d3.select(this)
+            .classed('mouseon', false)
+            
+        $detailtooltip.transition()		
+              .duration(200)		
+              .style("opacity", 0);	
+    })
+    .on('click', d=>{
+      
+      this.setState({onFocusWeibo: d.id}, ()=>{
+        $context.selectAll('.dmarkP')
+          .attr('opacity', d=>d.id==this.state.onFocusWeibo?'1': '0.55')
+      })
 
-                    })
+      EventBus.emit('weibo-click', d.id)
+
+    })
     $context.selectAll('.dmark')
         .attr("transform", d => {
           return `translate(${x3(d.t)}, ${y3(d.hot)})`;
