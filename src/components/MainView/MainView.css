@@ -14,7 +14,7 @@
     width: 90px;			
     padding: 10px;				
     font: 12px sans-serif;		
-    color: snow;
+    color: white!important;
     background: rgb(46, 50, 56);	
     border: 0px;		
     border-radius: 8px;			
@@ -28,7 +28,7 @@
     width: 150px;			
     padding: 10px;				
     font: 12px sans-serif;		
-    color: snow;
+    color: white!important;
     background: rgb(46, 50, 56);	
     border: 0px;		
     border-radius: 8px;			

@@ -79,7 +79,7 @@ class MainView extends Component {
       return (
           <div className='container'>
             <TopBar>
-                <span id='top-title'>主视图</span>
+                <span id='top-title'>事件演变时序图</span>
                 <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
                   size="small"  checkedChildren="中国疫情背景" unCheckedChildren="海外疫情背景" defaultChecked onChange={this.switchCountry}/>
                 <Switch style={{float: 'right', marginRight: '10px',  marginTop: '3px'}} 
