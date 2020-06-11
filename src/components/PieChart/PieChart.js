@@ -142,7 +142,7 @@ export default class PieChart extends React.Component {
                     gridSize: 3,
                     sizeRange: [20, 30],
                     maskImage: maskImage,
-                    rotationRange: [-45, 45],
+                    rotationRange: [-40, 40],
                     //rotationRange: [-45, 0, 45, 90],
                     rotationStep: 30,
                     shape: 'circle',                

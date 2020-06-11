@@ -199,13 +199,13 @@ class MainView extends Component {
     //坐标轴
     const xAxis = d3.axisTop()
                     .scale(x)
-                    .tickFormat(d3.timeFormat('%d/%m'))
+                    .tickFormat(d3.timeFormat('%m/%d'))
     const mainyAxis = d3.axisLeft()
                   .scale(mainy);
     const casesyAxis = d3.axisRight()
                   .scale(casesy)
     const xAxis2 = d3.axisBottom(x2)
-                    .tickFormat(d3.timeFormat('%d/%m'))
+                    .tickFormat(d3.timeFormat('%m/%d'))
     
     //生成器
     var brush = d3.brushX()
