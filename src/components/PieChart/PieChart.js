@@ -86,14 +86,12 @@ export default class PieChart extends React.Component {
     }
 
     getOption = () => {
+        let maskImage = new Image();
+        maskImage.src = '/mask.png';
+
         let option = {
             backgroundColor: '#3a3a38',
             color: ['#ebe57a', '#9e9e9e', '#957bbf'],
-            title: {
-                //text: '用户评论情绪饼图',
-                //subtext: '纯属虚构',
-                left: 'center'
-            },
             tooltip: {
                 trigger: 'item',
             },
@@ -102,7 +100,7 @@ export default class PieChart extends React.Component {
                     color: 'white',
                 },
                 orient: 'vertical',
-                left: 10,
+                right: 10,
                 top: 10,
                 data: ['积极', '中性', '消极']
             },
@@ -122,7 +120,7 @@ export default class PieChart extends React.Component {
                     },
                     data: this.state.emotionData,
                     type: 'pie',
-                    radius: ['60%', '75%'], //环图
+                    radius: ['64%', '79%'], //环图
                     avoidLabelOverlap: false,
                     label: {
                         show: false,
@@ -141,13 +139,14 @@ export default class PieChart extends React.Component {
                 }, {
                     type: 'wordCloud',
                     roam: true,
-                    gridSize: 2,
-                    sizeRange: [15, 35],
-                    //sizeRange: [15, 40],
+                    gridSize: 3,
+                    sizeRange: [20, 30],
+                    maskImage: maskImage,
                     rotationRange: [-45, 45],
+                    //rotationRange: [-45, 0, 45, 90],
                     rotationStep: 30,
-                    shape: 'circle',
-                    //drawOutOfBound:true,
+                    shape: 'circle',                
+                    drawOutOfBound:false,
                     textStyle: {
                         normal: {
                             color: function () {
@@ -155,6 +154,10 @@ export default class PieChart extends React.Component {
                                 var colors = ['#eecf79', '#fba57d', '#80c4c5', '#bda39b', '#86a7ce', '#90caf9', '#ff5252', '#ffff8d',]
                                 return colors[parseInt(Math.random() * 7)];
                             }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
                         }
                     },
                     left: 'center',
