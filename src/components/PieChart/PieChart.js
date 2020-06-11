@@ -140,7 +140,7 @@ export default class PieChart extends React.Component {
                     type: 'wordCloud',
                     roam: true,
                     gridSize: 3,
-                    sizeRange: [20, 30],
+                    sizeRange: [18, 28],
                     maskImage: maskImage,
                     rotationRange: [-40, 40],
                     //rotationRange: [-45, 0, 45, 90],
