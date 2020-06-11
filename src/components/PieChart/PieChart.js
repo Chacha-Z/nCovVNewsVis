@@ -18,19 +18,19 @@ export default class PieChart extends React.Component {
     }
 
     componentDidMount() {
-        EventBus.addListener('weibo-click', (id)=>{
-            this.setState({id: id}, ()=>{
+        EventBus.addListener('weibo-click', (id) => {
+            this.setState({ id: id }, () => {
                 this.uploadData(this.state.id)
             })
         })
-        EventBus.addListener('rank-click', (id)=>{
-            this.setState({id: id}, ()=>{
+        EventBus.addListener('rank-click', (id) => {
+            this.setState({ id: id }, () => {
                 this.uploadData(this.state.id)
             })
         })
     }
 
-    uploadData(id){
+    uploadData(id) {
         axios.post("http://120.27.243.210:3000/getWeibo",
             //参数列表
             {
@@ -88,7 +88,7 @@ export default class PieChart extends React.Component {
     getOption = () => {
         let option = {
             backgroundColor: '#3a3a38',
-            color:['#ebe57a','#9e9e9e','#957bbf'],
+            color: ['#ebe57a', '#9e9e9e', '#957bbf'],
             title: {
                 //text: '用户评论情绪饼图',
                 //subtext: '纯属虚构',
@@ -96,11 +96,10 @@ export default class PieChart extends React.Component {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{b} : {c} ({d}%)'
             },
             legend: {
-                textStyle:{
-                    color:'white',
+                textStyle: {
+                    color: 'white',
                 },
                 orient: 'vertical',
                 left: 10,
@@ -118,10 +117,12 @@ export default class PieChart extends React.Component {
                     // //     {value: 10, name: '中性'},
                     // //     {value: 10, name: '消极'}
                     // // ],
-
+                    tooltip: {
+                        formatter: '{b} : {c} ({d}%)'
+                    },
                     data: this.state.emotionData,
                     type: 'pie',
-                    radius: ['60%', '75%'],
+                    radius: ['60%', '75%'], //环图
                     avoidLabelOverlap: false,
                     label: {
                         show: false,
@@ -151,7 +152,7 @@ export default class PieChart extends React.Component {
                         normal: {
                             color: function () {
                                 // var colors = ['#fda67e', '#81cacc', '#cca8ba', "#88cc81", "#82a0c5", '#fddb7e', '#735ba1', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-                                var colors = ['#eecf79','#fba57d','#80c4c5','#bda39b','#86a7ce','#90caf9','#ff5252','#ffff8d',]
+                                var colors = ['#eecf79', '#fba57d', '#80c4c5', '#bda39b', '#86a7ce', '#90caf9', '#ff5252', '#ffff8d',]
                                 return colors[parseInt(Math.random() * 7)];
                             }
                         }
@@ -160,7 +161,7 @@ export default class PieChart extends React.Component {
                     top: 0,
                     width: '100%',
                     height: '100%',
-                    data: this.state.wordData
+                    data:this.state.wordData,
                     // data: [
                     //     { name: '湖北', value: 120 },
                     //     { name: '武汉', value: 102 },
@@ -177,7 +178,7 @@ export default class PieChart extends React.Component {
     render() {
         return (
 
-            <div id='Pie' style={{ height: '90%'}}>
+            <div id='Pie' style={{ height: '90%' }}>
                 <TopBar>
                     <span id='top-title'>评论情绪分析</span>
                 </TopBar>

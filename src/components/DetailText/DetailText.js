@@ -11,7 +11,7 @@ import { thresholdScott } from 'd3';
 
 const { Text, Link } = Typography;
 
-const type_key = { 0: '疫情情况', 1: '药品研究', 2: '复工开学', 3: '社会活动', 4: '官方言行', 5: '海外疫况' }
+const type_key = { 0: '国内疫况', 1: '药品研究', 2: '复工开学', 3: '社会人文', 4: '官方言行', 5: '海外疫况' }
 
 const type_icon = {
     '0': <svg t="1591709355635" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7745" width="16" height="16"><path d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z" fill="#63a0cb" p-id="7746"></path></svg>,

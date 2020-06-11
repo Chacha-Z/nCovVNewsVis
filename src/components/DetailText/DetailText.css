@@ -24,3 +24,11 @@ a {
     /* font-weight: 650; */
     color: white;
 }
+
+body {
+    font-size: 16px;
+}
+
+.ant-row titlebox{
+    font-size: 16px;
+}

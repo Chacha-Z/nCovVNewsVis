@@ -5,7 +5,8 @@ import axios from 'axios'
 import ReactEcharts from 'echarts-for-react';
 import EventBus from '../../utils/EventBus'
 
-const color = ['#63a0cb','#eba0d4','#ba9dd4','#e88788','#b18d85','#8ecc8e']
+//const color = ['#63a0cb','#eba0d4','#ba9dd4','#e88788','#b18d85','#8ecc8e']
+const color = ['#f6d54a', '#f69846', '#ad46f3', '#ff3d3d', '#9daaff', '#6be990'] 
 
 export default class TypeLine extends React.Component {
     constructor(props) {
@@ -94,7 +95,7 @@ export default class TypeLine extends React.Component {
                 }
             },
             xAxis: {
-                data: ['国内疫况', '药品研究', '复工开学', '社会言行', '官方言行', '海外疫况'],
+                data: ['国内疫况', '药品研究', '复工开学', '社会人文', '官方言行', '海外疫况'],
                 axisTick: {
                     show: false
                 },
@@ -129,7 +130,7 @@ export default class TypeLine extends React.Component {
                 symbol: 'path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z', //柱子形状
                 itemStyle: {
                     normal: {
-                        opacity: 0.5
+                        opacity: 0.75
                     },
                     emphasis: {
                         opacity: 1
