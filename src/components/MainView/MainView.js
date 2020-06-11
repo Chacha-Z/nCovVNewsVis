@@ -130,7 +130,7 @@ class MainView extends Component {
     const lengendkeys = [
       {
         classification: 0,
-        text: '疫情情况',
+        text: '国内疫况',
       },
       {
         classification: 1,
@@ -146,11 +146,11 @@ class MainView extends Component {
       },
       {
         classification: 4,
-        text: '政府作为',
+        text: '官方言行',
       },
       {
         classification: 5,
-        text: '国外疫况',
+        text: '海外疫况',
       }
     ];
 
@@ -361,7 +361,7 @@ class MainView extends Component {
           .attr('fill', d=>color2[d.classification])
           .attr('opacity', d=>d[date2[this.state.isDay]]-stateFocus[this.state.isDay]==0?'1': '0.75')
           // .attr('opacity', 1)
-
+    const _this = this
     $plot.selectAll('.mark')
         .attr("transform", d => {
           return `translate(${x(d[date[this.state.isDay]])}, ${mainy(d[hot[this.state.isDay]])})`;
@@ -380,7 +380,8 @@ class MainView extends Component {
           let coordinates = d3.mouse(container);
 
           // console.log(coordinates)
-          $tooltip.html(d3.timeFormat('%Y-%m-%d')(d.date) + '<br/>' + lengendkeys[d.classification].text)
+          let showdate = [d.week+'周', d3.timeFormat('%Y-%m-%d')(d.date)]
+          $tooltip.html(showdate[_this.state.isDay] + '<br/>' + lengendkeys[d.classification].text)
               .style('left', (coordinates[0])+'px')
               .style('top', (coordinates[1])+'px')
 
