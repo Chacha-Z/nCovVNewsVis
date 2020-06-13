@@ -469,6 +469,20 @@ class MainView extends Component {
     d3.selectAll(".brush").call(brush.move, [x2(x2.domain()[0]), x2(x2.domain()[1])]);
     //图标说明
     this.drawLegend(lengendkeys, $plot, symbol, color2, w, margin)
+
+    const legendAxis = $plot.append('g')
+                            .attr('class', 'axis-legend')
+    legendAxis.append('text')
+              .text('热度/度')
+              .attr('fill','white')
+              .attr('font-size', '12px')
+              .attr('transform', `translate(${-margin.left+2}, 0)`)
+    legendAxis.append('text')
+              .text('疫情数量/例')
+              .attr('fill','white')
+              .attr('font-size', '12px')
+              .attr('transform', `translate(${w+20}, 0)`)
+              
   }
 
   drawLegend(lengendkeys, $plot, symbol, color2, w, margin){
@@ -483,7 +497,7 @@ class MainView extends Component {
             .selectAll("g")
             .data(lengendkeys)
             .enter().append("g")
-            .attr("transform", (d, i) => `translate(${w+margin.left+15}, ${i*25+20})`);
+            .attr("transform", (d, i) => `translate(${w+margin.left+15}, ${i*25+60})`);
     legend.append('path')
             .attr('d', symbol)
             .attr('opacity', .75)
