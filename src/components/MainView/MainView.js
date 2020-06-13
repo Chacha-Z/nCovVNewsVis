@@ -473,7 +473,7 @@ class MainView extends Component {
     const legendAxis = $plot.append('g')
                             .attr('class', 'axis-legend')
     legendAxis.append('text')
-              .text('热度/度')
+              .text('热度')
               .attr('fill','white')
               .attr('font-size', '12px')
               .attr('transform', `translate(${-margin.left+2}, 0)`)
