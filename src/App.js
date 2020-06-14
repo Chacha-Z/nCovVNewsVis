@@ -18,7 +18,7 @@ function App() {
       <Col span={24}>
         <div className='content'>
           <span id='main-title'>
-          <img src='/logo.png'/>基于社交媒体的疫情可视分析系统</span>
+          <img src='/logo.png'/>基于微博数据的疫情演化可视分析系统</span>
         </div>
       </Col>
     </Row>
